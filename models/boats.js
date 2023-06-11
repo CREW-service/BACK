@@ -64,6 +64,14 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         type: DataTypes.STRING,
       },
+      isPrivate: {
+        allowNull: false,
+        type: DataTypes.BOOLEAN,
+      },
+      softDelete: {
+        allowNull: false,
+        type: DataTypes.BOOLEAN,
+      },
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE,

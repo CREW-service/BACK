@@ -44,6 +44,14 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING,
       },
+      isPrivate: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN,
+      },
+      softDelete: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
