@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Boats extends Model {
     /**
@@ -11,19 +9,74 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.belongsTo(models.Users, {
+        targetKey: "snsId",
+        foreignKey: "snsId",
+        onDelete: "CASCADE",
+      });
+
+      this.hasMany(models.Comments, {
+        sourceKey: "boatId",
+        foreignKey: "boatId",
+      });
     }
   }
-  Boats.init({
-    title: DataTypes.STRING,
-    content: DataTypes.STRING,
-    keyword: DataTypes.STRING,
-    crewNumber: DataTypes.NUMBER,
-    endDate: DataTypes.STRING,
-    crew: DataTypes.ARRAY,
-    address: DataTypes.STRING
-  }, {
-    sequelize,
-    modelName: 'Boats',
-  });
+  Boats.init(
+    {
+      boatId: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: DataTypes.INTEGER,
+      },
+      snsId: {
+        allowNull: false,
+        type: DataTypes.STRING,
+        references: {
+          model: "Users",
+          key: "snsId",
+        },
+        onDelete: "CASCADE",
+      },
+      title: {
+        allowNull: false,
+        type: DataTypes.STRING,
+      },
+      content: {
+        allowNull: false,
+        type: DataTypes.STRING,
+      },
+      keyword: {
+        allowNull: false,
+        type: DataTypes.STRING,
+      },
+      crewNumber: {
+        allowNull: false,
+        type: DataTypes.NUMBER,
+      },
+      endDate: {
+        type: DataTypes.STRING,
+      },
+      crew: {
+        type: DataTypes.ARRAY,
+      },
+      address: {
+        allowNull: false,
+        type: DataTypes.STRING,
+      },
+      createdAt: {
+        allowNull: false,
+        type: DataTypes.DATE,
+      },
+      updatedAt: {
+        allowNull: false,
+        type: DataTypes.DATE,
+      },
+    },
+    {
+      sequelize,
+      modelName: "Boats",
+    }
+  );
   return Boats;
 };

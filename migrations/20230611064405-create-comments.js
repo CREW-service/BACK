@@ -1,28 +1,46 @@
-'use strict';
+"use strict";
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Comments', {
-      id: {
+    await queryInterface.createTable("Comments", {
+      commentId: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+      },
+      snsId: {
+        allowNull: false,
+        type: Sequelize.STRING,
+        references: {
+          model: "Users",
+          key: "snsId",
+        },
+        onDelete: "CASCADE",
+      },
+      boatId: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Boats",
+          key: "boatId",
+        },
+        onDelete: "CASCADE",
       },
       comment: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Comments');
-  }
+    await queryInterface.dropTable("Comments");
+  },
 };
