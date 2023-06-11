@@ -10,13 +10,13 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       this.hasMany(models.Boats, {
-        sourceKey: "snsId",
-        foreignKey: "snsId",
+        sourceKey: "userId",
+        foreignKey: "userId",
       });
 
       this.hasMany(models.Comments, {
-        sourceKey: "snsId",
-        foreignKey: "snsId",
+        sourceKey: "userId",
+        foreignKey: "userId",
       });
     }
   }
@@ -28,11 +28,6 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         type: DataTypes.INTEGER,
       },
-      snsId: {
-        allowNull: false,
-        unique: true,
-        type: DataTypes.STRING,
-      },
       email: {
         allowNull: false,
         unique: true,
@@ -42,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         type: DataTypes.STRING,
       },
-      name: {
+      nickname: {
         allowNull: false,
         unique: true,
         type: DataTypes.STRING,

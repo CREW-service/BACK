@@ -9,11 +9,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      snsId: {
-        allowNull: false,
-        unique: true,
-        type: Sequelize.STRING,
-      },
       email: {
         allowNull: false,
         unique: true,
@@ -23,7 +18,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING,
       },
-      name: {
+      nickname: {
         allowNull: false,
         unique: true,
         type: Sequelize.STRING,
