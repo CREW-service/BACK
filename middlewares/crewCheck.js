@@ -9,13 +9,6 @@ module.exports = async (req, res, next) => {
       ? authorizationCookies
       : authorizationHeaders;
 
-    // # 403 Cookie가 존재하지 않을 경우
-    if (!authorization) {
-      return res
-        .status(403)
-        .json({ errorMessage: "로그인이 필요한 기능입니다." });
-    }
-
     const [tokenType, tokenValue] = authorization.split(" "); // 중괄호{} 를 대괄호[]로 수정
     if (tokenType !== "Bearer") {
       res.clearCookie("authorization");
