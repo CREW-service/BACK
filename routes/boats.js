@@ -246,4 +246,102 @@ router.put("/boat/:boatId", authJwt, async (req, res) => {
   }
 });
 
+// 5. crew 모집 글 공개 여부 API
+//    @ 토큰을 검사, 해당 사용자가 작성한 채용공고 글만 공개 / 비공개 가능
+router.patch("/boat/:boatId", authJwt, async (req, res) => {
+  try {
+    // user
+    const { userNickename } = res.locals.user;
+    // params로 boatId
+    const { boatId } = req.params;
+    // body로 isPrivate 입력받기
+    const { isPrivate } = req.body;
+
+    // 모집 글 조회
+    const boat = await Boats.findOne({ where: { boatId } });
+    // 모집 글이 없을 경우
+    if (!boat) {
+      return res
+        .status(403)
+        .json({ errorMessage: "존재하지 않는 모집 글입니다." });
+    }
+    // 권한이 없을 경우
+    if (userNickename !== boat.captain) {
+      return res
+        .status(403)
+        .json({ errorMessage: "모집 글 상태 전환 권한이 없습니다." });
+    }
+
+    // 유효성 검사
+    if (isPrivate === undefined) {
+      return res
+        .status(412)
+        .json({ errorMessage: "올바르지 않은 상태 전환 요청입니다." });
+    } else {
+      boat.isPrivate = isPrivate;
+    }
+    const updateIsPrivateCount = await boat.save();
+
+    // 수정한 모집 글이 없을 경우
+    if (!updateIsPrivateCount) {
+      return res
+        .status(401)
+        .json({ errorMessage: "모집 글을 전환하지 못했습니다." });
+    }
+
+    // 전환 완료
+    return res.status(200).json({ message: "모집 글 상태를 전환 완료." });
+  } catch (e) {
+    console.log(e);
+    return res
+      .status(400)
+      .json({ errorMessage: "상태 업데이트 실패. 요청이 올바르지 않습니다." });
+  }
+});
+
+// 6. crew 모집 글 softDelete
+//    @ 모집 글에 softDelete 컬럼을 이용해 db에 남겨두지만 실제 서비스에서는 조회 X
+router.patch("/boat/:boatId/delete", authJwt, async (req, res) => {
+  try {
+    // user
+    const userNickename = res.locals.user;
+    // params로 boatId
+    const { boatId } = req.params;
+    // body로 softDelete
+    const { softDelete } = req.body;
+
+    // 모집 글 조회
+    const boat = await Boats.findByPk(boatId);
+
+    // 모집 글이 없을 경우
+    if (!boat) {
+      return res
+        .status(412)
+        .json({ errorMessage: "존재하지 않는 글입니다. 삭제 실패." });
+    }
+    // 모집 글 삭제 권한 확인
+    if (userNickename !== boat.captain) {
+      return res
+        .status(403)
+        .json({ errorMessage: "모집 글 삭제 권한이 없습니다." });
+    }
+
+    // 모집 글 삭제
+    const deleteCount = await Boats.destroy({ where: { boatId } });
+    if (deleteCount < 1) {
+      return res
+        .status(400)
+        .json({ errorMessage: "모집 글이 정상적으로 삭제되지 않았습니다." });
+    }
+
+    // 삭제 완료
+    return res.status(200).json({ message: "모집 글을 삭제 완료." });
+  } catch (e) {
+    console.log(e);
+    return res.status.json({
+      errorMessage: "모집 글 삭제 실패. 요청이 올바르지 않습니다.",
+    });
+  }
+});
+
 module.exports = router;
