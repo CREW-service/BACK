@@ -50,7 +50,8 @@ passport.deserializeUser(async (userId, done) => {
 
 kakao(); // kakaoStrategy.js의 module.exports를 실행합니다.
 
-app.use("/", [boatRouter, authRouter]);
+app.use("/", [boatRouter]);
+app.use("/", authRouter);
 
 const PORT = 3000;
 app.listen(PORT, () => {

@@ -2,7 +2,7 @@ const passport = require("passport");
 const KakaoStrategy = require("passport-kakao").Strategy;
 const bcrypt = require("bcrypt");
 
-const Users = require("../models/users");
+const { Users } = require("../models");
 
 module.exports = () => {
   passport.use(
@@ -17,7 +17,7 @@ module.exports = () => {
        * accessToken, refreshToken: 로그인 성공 후 카카오가 보내준 토큰
        * profile: 카카오가 보내준 유저 정보. profile의 정보를 바탕으로 회원가입
        */
-      async (accessToken, profile, done) => {
+      async (accessToken, refreshToken, profile, done) => {
         console.log("kakao profile : ", profile);
         try {
           const exUser = await Users.findOne({
@@ -39,7 +39,7 @@ module.exports = () => {
             }
             // 가입되지 않는 유저면 회원가입 시키고 로그인을 시킨다
             const newUser = await Users.create({
-              email: profile._json.kakao_account_email,
+              email: profile._json.kakao_account.email,
               nickName: profile.displayName,
               snsId: profile.id,
               password: hash,
