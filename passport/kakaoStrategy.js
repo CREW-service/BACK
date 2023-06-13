@@ -18,7 +18,7 @@ module.exports = () => {
        * profile: 카카오가 보내준 유저 정보. profile의 정보를 바탕으로 회원가입
        */
       async (accessToken, profile, done) => {
-        console.log("kakao profile", profile);
+        console.log("kakao profile : ", profile);
         try {
           const exUser = await Users.findOne({
             // 카카오 플랫폼에서 로그인 했고 & snsId필드에 카카오 아이디가 일치할경우
@@ -39,7 +39,7 @@ module.exports = () => {
             }
             // 가입되지 않는 유저면 회원가입 시키고 로그인을 시킨다
             const newUser = await Users.create({
-              email: profile._json && profile._json.kakao_account_email,
+              email: profile._json.kakao_account_email,
               nickName: profile.displayName,
               snsId: profile.id,
               password: hash,
