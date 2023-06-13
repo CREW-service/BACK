@@ -34,27 +34,23 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING,
       },
-      crewNumber: {
+      maxCrewNum: {
         allowNull: false,
-        type: Sequelize.NUMBER,
+        type: Sequelize.INTEGER,
       },
       endDate: {
         type: Sequelize.STRING,
-      },
-      crew: {
-        type: Sequelize.ARRAY,
       },
       address: {
         allowNull: false,
         type: Sequelize.STRING,
       },
-      isPrivate: {
+      isDone: {
         allowNull: false,
         type: Sequelize.BOOLEAN,
       },
-      softDelete: {
-        allowNull: false,
-        type: Sequelize.BOOLEAN,
+      deletedAt: {
+        type: Sequelize.DATE,
       },
       createdAt: {
         allowNull: false,

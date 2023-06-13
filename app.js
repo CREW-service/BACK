@@ -1,4 +1,5 @@
 const express = require("express");
+const authRouter = require("./routes/auth");
 const boatRouter = require("./routes/boats");
 
 const app = express();
@@ -6,6 +7,7 @@ const app = express();
 app.use(express.json());
 
 app.use("/", [boatRouter]);
+app.use("/auth", authRouter);
 
 const PORT = 3000;
 app.listen(PORT, () => {
