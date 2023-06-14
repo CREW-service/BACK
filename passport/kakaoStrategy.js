@@ -1,6 +1,7 @@
 const passport = require("passport");
 const KakaoStrategy = require("passport-kakao").Strategy;
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const { Users } = require("../models");
 
@@ -18,7 +19,6 @@ module.exports = () => {
        * profile: 카카오가 보내준 유저 정보. profile의 정보를 바탕으로 회원가입
        */
       async (accessToken, refreshToken, profile, done) => {
-        console.log(accessToken);
         try {
           const exUser = await Users.findOne({
             // 카카오 플랫폼에서 로그인 했고 & snsId필드에 카카오 아이디가 일치할경우
@@ -26,7 +26,14 @@ module.exports = () => {
           });
           // 이미 가입된 카카오 프로필이면 성공
           if (exUser) {
-            done(null, exUser); // 로그인 인증 완료
+            const token = jwt.sign(
+              {
+                userId: exUser.userId,
+              },
+              process.env.JWT_SECRET
+            );
+            console.log(token);
+            done(null, token); // 로그인 인증 완료
           }
 
           const saltRounds = 10; // salt가 몇 글자인지 설정
@@ -44,7 +51,13 @@ module.exports = () => {
               snsId: profile.id,
               password: hash,
             });
-            done(null, newUser); // 회원가입하고 로그인 인증 완료
+            const token = jwt.sign(
+              {
+                userId: newUser.userId,
+              },
+              process.env.JWT_SECRET
+            );
+            done(null, token); // 회원가입하고 로그인 인증 완료
           });
         } catch (error) {
           console.error(error);

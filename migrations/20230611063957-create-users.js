@@ -12,7 +12,7 @@ module.exports = {
       snsId: {
         allowNull: false,
         unique: true,
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
       },
       email: {
         allowNull: false,

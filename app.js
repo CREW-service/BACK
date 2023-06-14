@@ -39,7 +39,7 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser(async (userId, done) => {
   console.log("deserializeUser", userId);
   try {
-    const user = await Users.findOne({ where: { userId: userId } });
+    const user = await Users.findOne({ where: { userId } });
     console.log("Found user", user);
     done(null, user);
   } catch (error) {
