@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         type: DataTypes.INTEGER,
         references: {
-          model: "Boats",
+          model: "Users",
           key: "userId",
         },
         onDelete: "CASCADE",

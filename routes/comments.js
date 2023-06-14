@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { Crews, Comments, Boats } = require("../models");
+const { Crew, Comments, Boats } = require("../models");
 const authJwt = require("../middlewares/authMiddleware");
 
 // 1. 댓글 작성
@@ -22,6 +22,14 @@ router.post("/boat/:boatId/comment", authJwt, async (req, res) => {
       return res
         .status(412)
         .json({ errorMessage: "모집 글이 존재하지 않습니다." });
+    }
+
+    // Crew인지 확인하기
+    const isExistCrew = await Crew.findOne({ where: { boatId, userId } });
+    if (!isExistCrew) {
+      return res.status(404).json({
+        errorMessage: "모임에 참가하지 않아 댓글 작성 권한이 없습니다.",
+      });
     }
 
     // 작성 내용 확인
@@ -106,7 +114,7 @@ router.patch("/boat/:boatId/comment/:commentId", authJwt, async (req, res) => {
     if (!boat) {
       return res
         .status(404)
-        .json({ errorMessage: "존재하지 않는 모집 글 입디나." });
+        .json({ errorMessage: "존재하지 않는 모집 글입니다." });
     }
 
     // comment 글 확인

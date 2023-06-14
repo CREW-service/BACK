@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const authJwt = require("../middlewares/authMiddleware"); // Crew 회원 확인을 위한 middleware
 const crewCheck = require("../middlewares/crewCheck"); // 모임의 crew인지 확인
-const { sequelize, Users, Boats, Comments, Crews } = require("../models");
+const { sequelize, Users, Boats, Comments, Crew } = require("../models");
 
 // 1. Crew 모집 글 작성 API
 //      @ 토큰을 검사하여, 유효한 토큰일 경우에만 채용공고 글 작성 가능
@@ -85,7 +85,7 @@ router.get("/boat/map", async (req, res) => {
         "maxCrewNum",
         [
           sequelize.literal(
-            `(SELECT COUNT(*) FROM Boats WHERE Boats.boatId = Crews.boatId )`
+            `(SELECT COUNT(*) FROM Boats WHERE Boats.boatId = Crew.boatId )`
           ) + 1,
           "crewCount",
         ],
@@ -126,7 +126,7 @@ router.get("/boat/:boatId", authJwt, async (req, res) => {
       raw: true,
     });
     // crewMember 조회
-    const crewMember = await Crews.findAll({
+    const crewMember = await Crew.findAll({
       attributes: ["nickName"],
       where: { boatId },
       group: ["Boats.boatId"],
@@ -143,7 +143,7 @@ router.get("/boat/:boatId", authJwt, async (req, res) => {
         "maxCrewNum",
         [
           sequelize.literal(
-            `(SELECT COUNT(*) FROM Boats WHERE Boats.boatId = Crews.boatId )`
+            `(SELECT COUNT(*) FROM Boats WHERE Boats.boatId = Crew.boatId )`
           ) + 1,
           "crewCount",
         ],
@@ -152,7 +152,7 @@ router.get("/boat/:boatId", authJwt, async (req, res) => {
       where: { boatId },
       include: [
         {
-          model: Crews,
+          model: Crew,
           attributes: [],
         },
       ],
