@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const authJwt = require("../middlewares/authMiddleware"); // Crew 회원 확인을 위한 middleware
-const crewCheck = require("../middlewares/crewCheck"); // 모집 글의 crew인지 확인
-const { sequelize, Users, Boats, Comments } = require("../models");
+const crewCheck = require("../middlewares/crewCheck"); // 모임의 crew인지 확인
+const { sequelize, Users, Boats, Comments, Crews } = require("../models");
 
 // 1. Crew 모집 글 작성 API
 //      @ 토큰을 검사하여, 유효한 토큰일 경우에만 채용공고 글 작성 가능
@@ -83,7 +83,12 @@ router.get("/boat/map", async (req, res) => {
         "keyword",
         "endDate",
         "maxCrewNum",
-        [sequelize.literal(`(SELECT COUNT(*) FROM Boats WHERE Boats. )`)],
+        [
+          sequelize.literal(
+            `(SELECT COUNT(*) FROM Boats WHERE Boats.boatId = Crews.boatId )`
+          ) + 1,
+          "crewCount",
+        ],
         "address",
       ],
       group: ["Boats.boatId"],
@@ -91,7 +96,7 @@ router.get("/boat/map", async (req, res) => {
     });
 
     // 작성된 채용공고 글이 없을 경우
-    if (jobs.length === 0) {
+    if (boats.length === 0) {
       return res
         .status(400)
         .json({ errorMessage: "작성된 모집 글이 없습니다." });
@@ -108,39 +113,97 @@ router.get("/boat/map", async (req, res) => {
 
 // 3. Crew 모집 글 상세 조회 API
 //      @ <게스트용> boatId, title, content, keyword, maxCrewNum, crewCount, endDate, address 조회
-//      @ <Crew, 선장용> boatId, title, content, keyword, maxCrewNum, crewCount, endDate, address, Crew, isCaptain 조회
-router.get("/boat/:boatId", crewCheck, async (req, res) => {
+//      @ <Crew, 선장용> boatId, title, content, keyword, maxCrewNum, crewCount, endDate, address 조회
+router.get("/boat/:boatId", authJwt, async (req, res) => {
   try {
     const { boatId } = req.params;
-    // userNickname 확인
+    // userId 확인
     const { userId } = res.locals.user;
-    // crew 원 확인
-    const boatMember = await Boats.findOne({
-      attributes: ["crew", "captain"],
+    // userId를 통해 nickName 조회
+    const user = await Users.findOne({
+      attributes: ["nickName"],
+      where: { userId },
+      raw: true,
+    });
+    // crewMember 조회
+    const crewMember = await Crews.findAll({
+      attributes: ["nickName"],
       where: { boatId },
       group: ["Boats.boatId"],
       raw: true,
     });
 
-    const captain = boatMember.captain;
-    const crewNickname = boatMember.crew;
+    // 글 조회
+    const boat = await Boats.findOne({
+      attributes: [
+        "boatId",
+        "captain",
+        "title",
+        "content",
+        "maxCrewNum",
+        [
+          sequelize.literal(
+            `(SELECT COUNT(*) FROM Boats WHERE Boats.boatId = Crews.boatId )`
+          ) + 1,
+          "crewCount",
+        ],
+        "endDate",
+      ],
+      where: { boatId },
+      include: [
+        {
+          model: Crews,
+          attributes: [],
+        },
+      ],
+      group: ["Boats.boatId"],
+      raw: true,
+    });
 
-    for (let i = 0; i < crewNickname.length; i++) {
-      if (crewNickname[i] !== userId) {
-        const boatForQuests = await Boats.findOne({
-          attributes: [
-            "boatId",
-            "title",
-            "content",
-            "keyword",
-            "maxCrewNum",
-            "crewCount",
-            "endDate",
-            "address",
-          ],
-          where: { boatId },
-        });
+    // 글에 해당하는 댓글 조회
+    const comments = await Comments.findAll({
+      attributes: [
+        "commentId",
+        "userId",
+        [sequelize.col("nickname"), "nickname"],
+        "comment",
+      ],
+      where: { boatId },
+      include: [
+        {
+          model: Users,
+          attributes: [],
+        },
+      ],
+      raw: true,
+    });
+
+    let exisNickName = 0;
+    let isCaptain = 0;
+    // user.nickName 정보와 crewMember와 비교
+    for (let i = 0; i < crewMember.length; i++) {
+      if (user.nickName === crewMember[i].nickName) {
+        return (exisNickName = 1);
+      } else {
+        return user.nickName === boat.captain
+          ? (isCaptain = 1)
+          : (isCaptain = 0);
       }
+    }
+
+    // 유저 정보에 따라 다르게 보내기
+    // 참가 O
+    if ((exisNickName = 1)) {
+      // crew라는 것을 알리기. captain은 아니다.
+      return res.status(200).json({ boat, crewMember, comments });
+    }
+    // 참가 X ==> captain 확인
+    if ((isCaptain = 1)) {
+      // captain라는 것을 표시하기.
+      return res.status(200).json({ boat, crewMember, comments, isCaptain });
+    } else {
+      // 참가인원이 아니므로 boat 정보만 넘긴다.
+      return res.status(200).json({ boat });
     }
   } catch (e) {
     console.log(e);
@@ -282,10 +345,10 @@ router.patch("/boat/:boatId", authJwt, async (req, res) => {
     } else {
       boat.isDone = isDone;
     }
-    const updateisDoneCount = await boat.save();
+    const updateIsDoneCount = await boat.save();
 
     // 수정한 모집 글이 없을 경우
-    if (!updateisDoneCount) {
+    if (!updateIsDoneCount) {
       return res
         .status(401)
         .json({ errorMessage: "모집 글을 전환하지 못했습니다." });
@@ -329,11 +392,18 @@ router.patch("/boat/:boatId/delete", authJwt, async (req, res) => {
     }
 
     // 모집 글 삭제
-    const deleteCount = await Boats.destroy({ where: { boatId } });
-    if (deleteCount < 1) {
+    if (deletedAt === undefined) {
       return res
-        .status(400)
-        .json({ errorMessage: "모집 글이 정상적으로 삭제되지 않았습니다." });
+        .status(412)
+        .json({ errorMessage: "삭제 요청이 올바르지 않습니다." });
+    } else {
+      boat.deletedAt = deletedAt;
+    }
+    const updateDeletedAtCount = await boat.save();
+
+    // softDelete 안됐을 경우
+    if (!updateDeletedAtCount) {
+      return res.status(401).json({ errorMessage: "삭제된 글이 없습니다." });
     }
 
     // 삭제 완료

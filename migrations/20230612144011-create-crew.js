@@ -18,6 +18,15 @@ module.exports = {
         },
         onDelete: "CASCADE",
       },
+      userId: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Boats",
+          key: "userId",
+        },
+        onDelete: "CASCADE",
+      },
       nickName: {
         allowNull: false,
         type: Sequelize.STRING,

@@ -28,6 +28,15 @@ module.exports = (sequelize, DataTypes) => {
         },
         onDelete: "CASCADE",
       },
+      userId: {
+        allowNull: false,
+        type: DataTypes.INTEGER,
+        references: {
+          model: "Boats",
+          key: "userId",
+        },
+        onDelete: "CASCADE",
+      },
       nickName: {
         allowNull: false,
         type: DataTypes.STRING,
