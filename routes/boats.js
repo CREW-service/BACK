@@ -399,10 +399,10 @@ router.patch("/boat/:boatId/delete", authJwt, async (req, res) => {
     } else {
       boat.deletedAt = deletedAt;
     }
-    const updateDeletedAtCount = await boat.save();
+    const deletedAtCount = await boat.save();
 
     // softDelete 안됐을 경우
-    if (!updateDeletedAtCount) {
+    if (!deletedAtCount) {
       return res.status(401).json({ errorMessage: "삭제된 글이 없습니다." });
     }
 
