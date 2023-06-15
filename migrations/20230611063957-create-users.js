@@ -11,13 +11,13 @@ module.exports = {
       },
       snsId: {
         allowNull: false,
-        unique: true,
         type: Sequelize.INTEGER,
+        unique: true,
       },
       email: {
         allowNull: false,
-        unique: true,
         type: Sequelize.STRING,
+        unique: true,
       },
       password: {
         allowNull: false,
@@ -25,7 +25,6 @@ module.exports = {
       },
       nickname: {
         allowNull: false,
-        unique: true,
         type: Sequelize.STRING,
       },
       createdAt: {

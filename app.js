@@ -4,6 +4,7 @@ const authRouter = require("./routes/auth");
 const boatRouter = require("./routes/boats");
 const kakao = require("./passport/kakaoStrategy");
 const passport = require("passport");
+const jwt = require("jsonwebtoken");
 
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
@@ -14,6 +15,7 @@ require("dotenv").config();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -31,21 +33,8 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-passport.serializeUser((user, done) => {
-  console.log("serializeUser", user);
-  done(null, user.dataValues.userId);
-});
-
-passport.deserializeUser(async (userId, done) => {
-  console.log("deserializeUser", userId);
-  try {
-    const user = await Users.findOne({ where: { userId } });
-    console.log("Found user", user);
-    done(null, user);
-  } catch (error) {
-    console.error("Error in deserializeUser", error);
-    done(error);
-  }
+passport.serializeUser((token, done) => {
+  done(null, token);
 });
 
 kakao(); // kakaoStrategy.js의 module.exports를 실행합니다.

@@ -30,13 +30,13 @@ module.exports = (sequelize, DataTypes) => {
       },
       snsId: {
         allowNull: false,
-        unique: true,
         type: DataTypes.INTEGER,
+        unique: true,
       },
       email: {
         allowNull: false,
-        unique: true,
         type: DataTypes.STRING,
+        unique: true,
       },
       password: {
         allowNull: false,
@@ -44,7 +44,6 @@ module.exports = (sequelize, DataTypes) => {
       },
       nickName: {
         allowNull: false,
-        unique: true,
         type: DataTypes.STRING,
       },
       createdAt: {
