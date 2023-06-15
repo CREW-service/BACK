@@ -21,6 +21,7 @@
     "mysql2": "^3.3.3",
     "passport": "^0.6.0",
     "passport-kakao": "^1.0.1",
+    "path": "^0.12.7",
     "sequelize": "^6.32.0"
   },
   "devDependencies": {

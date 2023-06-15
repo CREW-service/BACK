@@ -21,4 +21,14 @@ router.get(
   }
 );
 
+router.get("/auth/logout", (req, res) => {
+  req.logout(function (err) {
+    if (err) {
+      console.error(err);
+      return res.redirect("/"); // 로그아웃 중 에러가 발생한 경우에 대한 처리
+    }
+    res.clearCookie("authorization");
+    res.redirect("http://localhost:3000"); // 로그아웃 성공 시 리다이렉트
+  });
+});
 module.exports = router;

@@ -1,20 +1,21 @@
 const express = require("express");
-const { Users } = require("./models");
-const authRouter = require("./routes/auth");
-const boatRouter = require("./routes/boats");
 const kakao = require("./passport/kakaoStrategy");
 const passport = require("passport");
-const jwt = require("jsonwebtoken");
+const path = require("path");
+require("dotenv").config();
+
+const authRouter = require("./routes/auth");
+const boatRouter = require("./routes/boats");
 
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 
 const app = express();
-require("dotenv").config();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(express.static(path.join(__dirname, "public")));
 
 app.use(
   session({
