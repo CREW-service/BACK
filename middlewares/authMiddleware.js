@@ -24,7 +24,7 @@ module.exports = async (req, res, next) => {
         .json({ errorMessage: "전달된 쿠키에서 오류가 발생하였습니다." });
     }
 
-    const { userId } = jwt.verify(tokenValue, "crewProjectJwt_");
+    const { userId } = jwt.verify(tokenValue, process.env.JWT_SECRET);
     const user = await Users.findByPk(userId);
 
     res.locals.user = user;
