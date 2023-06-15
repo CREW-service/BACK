@@ -38,6 +38,16 @@ passport.serializeUser((token, done) => {
   done(null, token);
 });
 
+passport.deserializeUser((id, done) => {
+  Users.findByPk(id)
+    .then((user) => {
+      done(null, user);
+    })
+    .catch((err) => {
+      done(err);
+    });
+});
+
 kakao(); // kakaoStrategy.js의 module.exports를 실행합니다.
 
 app.use("/", [boatRouter]);

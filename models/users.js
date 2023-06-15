@@ -28,11 +28,6 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         type: DataTypes.INTEGER,
       },
-      snsId: {
-        allowNull: false,
-        type: DataTypes.INTEGER,
-        unique: true,
-      },
       email: {
         allowNull: false,
         type: DataTypes.STRING,

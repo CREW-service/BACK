@@ -16,7 +16,11 @@ router.get(
   // kakaoStrategy에서 성공한다면 콜백 실행
   (req, res) => {
     const token = req.user; // 사용자 토큰 정보 (예: JWT 토큰)
-    res.cookie("authorization", `Bearer ${token}`);
+    res.cookie("authorization", `Bearer ${token}`, {
+      httpOnly: true,
+      secure: true, // HTTPS를 사용하는 경우에만 true로 설정해야 합니다.
+      // 다른 쿠키 옵션들을 필요에 따라 설정해 주세요.
+    });
     res.redirect("/");
   }
 );
@@ -28,7 +32,8 @@ router.get("/auth/logout", (req, res) => {
       return res.redirect("/"); // 로그아웃 중 에러가 발생한 경우에 대한 처리
     }
     res.clearCookie("authorization");
-    res.redirect("http://localhost:3000"); // 로그아웃 성공 시 리다이렉트
+    req.session.destroy();
+    res.redirect("/"); // 로그아웃 성공 시 리다이렉트
   });
 });
 module.exports = router;
