@@ -33,9 +33,7 @@ module.exports = () => {
             const newUser = await Users.create({
               email: profile._json.kakao_account.email,
               nickName: profile.displayName,
-              snsId: profile.id,
             });
-            console.log("newUser : ", newUser);
 
             const token = jwt.sign(
               {
