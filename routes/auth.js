@@ -24,7 +24,7 @@ router.get(
     return res
       .status(201)
       .json({ token: token, message: "로그인 성공" })
-      .redirect("/");
+      .redirect("http://react.ysizuku.com");
   }
 );
 
