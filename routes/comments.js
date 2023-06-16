@@ -148,3 +148,5 @@ router.patch("/boat/:boatId/comment/:commentId", authJwt, async (req, res) => {
       .json({ errorMessage: "댓글 삭제 실패. 요청이 올바르지 않습니다." });
   }
 });
+
+module.exports = router;
