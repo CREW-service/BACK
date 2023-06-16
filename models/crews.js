@@ -9,6 +9,17 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.belongsTo(models.Users, {
+        targetKey: "userId",
+        foreignKey: "userId",
+        onDelete: "CASCADE",
+      });
+
+      this.belongsTo(models.Boats, {
+        targetKey: "boatId",
+        foreignKey: "boatId",
+        onDelete: "CASCADE",
+      });
     }
   }
   Crew.init(
@@ -49,7 +60,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       timestamps: false,
       sequelize,
-      modelName: "Crew",
+      modelName: "Crews",
     }
   );
   return Crew;

@@ -9,11 +9,16 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.belongsTo(models.Users, {
+        targetKey: "userId",
+        foreignKey: "userId",
+        onDelete: "CASCADE",
+      });
     }
   }
   Alarms.init(
     {
-      AlarmId: {
+      alarmId: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,

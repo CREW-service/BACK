@@ -19,6 +19,11 @@ module.exports = (sequelize, DataTypes) => {
         sourceKey: "boatId",
         foreignKey: "boatId",
       });
+
+      this.hasMany(models.Crews, {
+        sourceKey: "boatId",
+        foreignKey: "boatId",
+      });
     }
   }
   Boats.init(
