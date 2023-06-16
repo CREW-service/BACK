@@ -16,14 +16,12 @@ router.get(
   // kakaoStrategy에서 성공한다면 콜백 실행
   (req, res) => {
     const token = req.user; // 사용자 토큰 정보 (예: JWT 토큰)
-    res.cookie("authorization", `Bearer ${token}`, {
-      httpOnly: true,
-      secure: true, // HTTPS를 사용하는 경우에만 true로 설정해야 합니다.
-      // 다른 쿠키 옵션들을 필요에 따라 설정해 주세요.
-    });
-    return res
-      .status(201)
-      .json({ token: token, message: "로그인 성공" })
+    res
+      .cookie("authorization", `Bearer ${token}`, {
+        httpOnly: true,
+        secure: true, // HTTPS를 사용하는 경우에만 true로 설정해야 합니다.
+        // 다른 쿠키 옵션들을 필요에 따라 설정해 주세요.
+      })
       .redirect("http://react.ysizuku.com");
   }
 );
