@@ -20,14 +20,14 @@ router.post("/boat/:boatId/comment", authJwt, async (req, res) => {
     // 글이 없을 경우
     if (!boat) {
       return res
-        .status(412)
+        .status(404)
         .json({ errorMessage: "모집 글이 존재하지 않습니다." });
     }
 
     // Crew인지 확인하기
     const isExistCrew = await Crew.findOne({ where: { boatId, userId } });
     if (!isExistCrew) {
-      return res.status(404).json({
+      return res.status(401).json({
         errorMessage: "모임에 참가하지 않아 댓글 작성 권한이 없습니다.",
       });
     }
@@ -84,7 +84,7 @@ router.put("/boat/:boatId/comment/:commentId", authJwt, async (req, res) => {
 
     if (updateCount < 1) {
       return res
-        .status(400)
+        .status(404)
         .json({ errorMessage: "댓글 수정이 정상적으로 처리되지 않았습니다." });
     }
 
@@ -118,8 +118,8 @@ router.patch("/boat/:boatId/comment/:commentId", authJwt, async (req, res) => {
     }
 
     // comment 글 확인
-    const isExistComment = await Comments.findByPk(commentId);
-    if (!commentId) {
+    const comment = await Comments.findByPk(commentId);
+    if (!comment) {
       return res
         .status(404)
         .json({ errorMessage: "존재하지 않는 댓글입니다." });

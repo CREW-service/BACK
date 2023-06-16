@@ -3,126 +3,135 @@ const router = express.Router();
 const authJwt = require("../middlewares/authMiddleware");
 const { Users, Boats, Crews, Alarms } = require("../models");
 
-// 1. 모임에 참여했을 때 captain에게 알림 보내기
+// 1. 참가하기 API
+//    @ 로그인한 회원을 확인
+//    @ 글의 maxCrewNum와 crewNum을 확인해서 참가 가능 여부 설정
 router.post("/boat/:boatId/join", authJwt, async (req, res) => {
   try {
-    // user
-    const { userId } = res.locals.user;
-    // boatId를 params로
-    const { boatId } = req.params;
-    // user 정보 가져오기
+    // user 정보
+    const { userId } = req.locals.user;
     const user = await Users.findOne({
       attributes: ["nickName"],
-      where: { userId },
       raw: true,
     });
-    // isReleased 초기 값 설정
-    const isReleased = false;
+    // params로 boatId
+    const { boatId } = req.params;
 
-    // 모집 글 확인
+    // 글에서 maxCrewNum와 crewNum을 확인하기
     const boat = await Boats.findOne({
-      where: { boatId },
+      attributes: [
+        "userId",
+        "maxCrewNum",
+        [
+          sequelize.literal(
+            `(SELECT COUNT(*) FROM Boats WHERE Boats.boatId = Crew.boatId )`
+          ) + 1,
+          "crewNum",
+        ],
+      ],
       raw: true,
     });
+
+    // 글이 존재하지 않을 경우
     if (!boat) {
-      return res.status(404).json({ errorMessage: "존재하지 않는 글입니다." });
+      return res.status(404).json({ errorMessage: "글이 존재하지 않습니다." });
     }
 
-    // Crews 테이블에 넣어주기
-    await Crews.create({
-      nickName: user.nickName,
-      isReleased,
-    });
-
-    // 알림 확인 초기 값
+    // 값 설정
+    const isReleased = false;
     const isRead = false;
-    // 메시지 생성
-    const message = `${user.nickName}님이 배에 승선했습니다.`;
+    const alarmMessage = `${user.nickName}님이 모임에 참가했습니다.`;
 
-    // alarm 생성하기
-    await Alarms.create({
-      isRead,
-      message,
-    });
-
-    // 참여 성공
-    return res.status(200).json({ message: "참여 성공." });
+    // maxCrewNum, crewNum 숫자 비교
+    if (boat.maxCrewNum > boat.crewNum) {
+      await Crews.create({
+        userId,
+        boatId,
+        nickName: user.nickName,
+        isReleased,
+      });
+      await Alarms.create({
+        userId: boat.userId,
+        isRead,
+        message: alarmMessage,
+      });
+      return res.status(200).json({ message: "참가 성공." });
+    } else {
+      return res.status(203).json({ message: "모집이 마감되었습니다." });
+    }
   } catch (e) {
     console.log(e);
     return res
       .status(400)
-      .json({ errorMessage: "참여 실패. 요청이 올바르지 않습니다." });
+      .json({ errorMessage: "참가 요청 실패. 요청이 올바르지 않습니다." });
   }
 });
 
-// 2. 내보내기
-//      @ 토큰을 검사하고 captain인지 확인
-//      @ 확인 후 내보내기
+// 2. 내보내기 API
+//    @ 토큰을 검사하여 권한을 확인
+//    @ 내보내면 Crews에서 isReleased를 true로 전환, Alarms를 이용해 알림 생성
 router.post("/boat/:boatId/release", authJwt, async (req, res) => {
   try {
-    // user
-    const { userId } = res.locals.user;
-    // boatId를 params로
+    // user 정보
+    const { userId } = req.locals.user;
+    // params로 boatId
     const { boatId } = req.params;
-    // body로 isReleased
-    const { isReleased, nickName } = req.body;
-
-    // user 정보 가져오기
-    const user = await Users.findOne({
-      attributes: ["nickName"],
-      where: { userId },
-      raw: true,
-    });
-
-    // 모집 글 정보 가져오기
     const boat = await Boats.findOne({
-      attributes: ["captain"],
+      attributes: ["userId", "keyword"],
       where: { boatId },
       raw: true,
     });
+    // body로 내보낼 crew의 nickName 보내기
+    const { nickName } = req.body;
 
-    // crewMember 조회
-    const crew = await Crews.findAll({
-      attributes: ["nickName"],
-      where: { boatId, isReleased: false },
-      raw,
-    });
-
-    // 모집 글 확인
+    // 글 확인
     if (!boat) {
+      return res.status(404).json({ errorMessage: "글이 존재하지 않습니다." });
+    }
+
+    // 권한이 있는지 확인하기
+    if (userId !== boat.userId) {
       return res
-        .status(404)
-        .json({ errorMessage: "존재하지 않는 모집 글입니다." });
+        .status(401)
+        .json({ errorMessage: "모임 내보내기 권한이 없습니다." });
     }
-    // 유요한 요청인지 확인
-    if (isReleased === undefined) {
-      return res.status(404).json({ errorMessage: "잘못된 요청입니다." });
-    }
-    // 내보내기
-    if (isReleased) {
-      crew.isReleased = isReleased;
-    }
-    const updateIsReleased = await Crews.save();
-    if (!updateIsReleased) {
+
+    // boatId로 crew 조회
+    const crew = await Crews.findOne({
+      attributes: ["userId"],
+      where: { boatId, nickName },
+      raw: true,
+    });
+    // 값 설정
+    const isReleased = true;
+    const isRead = false;
+    const alarmMessage = `${boat.keyword} 모임에서 내보내졌습니다.`;
+    // crew 확인
+    if (crew) {
+      const updateCount = await Crews.update(
+        { isReleased: isReleased },
+        { where: { boatId, nickName } }
+      );
+      if (!updateCount) {
+        return res.status(404).json({ errorMessage: "내보내기 실패." });
+      } else {
+        await Alarms.create({
+          userId: crew.userId,
+          isRead,
+          message: alarmMessage,
+        });
+        return res.status(200).json({ message: "내보내기 성공." });
+      }
+    } else {
       return res
         .status(412)
-        .json({ errorMessage: "내보내기가 정상적으로 처리되지 못했습니다." });
+        .json({ errorMessage: `${nickName}님이 crew가 아닙니다.` });
     }
-
-    // 알림 확인 초기 값
-    const isRead = false;
-
-    // alarm 생성하기
-    await Alarms.create({
-      isRead,
-      message,
-    });
-    return res.status(200).json({ message: "정상적으로 내보내기 완료." });
   } catch (e) {
     console.log(e);
     return res
       .status(400)
-      .json({ errorMessage: "내보내기 실패. 요청이 올바르지 않습니다." });
+      .json({ errorMessage: "내보내기 요청 실패. 요청이 올바르지 않습니다." });
   }
 });
 module.exports = router;

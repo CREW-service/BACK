@@ -33,7 +33,7 @@ module.exports = async (req, res, next) => {
   } catch (e) {
     console.log(e);
     return res.status(403).json({
-      errorMessage: "로그인이 필요한 기능입니다. 요청이 올바르지 않습니다.",
+      errorMessage: "authLoginCheck : 요청이 올바르지 않습니다.",
     });
   }
 };
