@@ -17,11 +17,7 @@ router.get(
   (req, res) => {
     const token = req.user; // 사용자 토큰 정보 (예: JWT 토큰)
     res
-      .cookie("authorization", `Bearer ${token}`, {
-        httpOnly: true,
-        secure: true, // HTTPS를 사용하는 경우에만 true로 설정해야 합니다.
-        // 다른 쿠키 옵션들을 필요에 따라 설정해 주세요.
-      })
+      .cookie("authorization", `Bearer ${token}`)
       .redirect("http://react.ysizuku.com");
   }
 );
