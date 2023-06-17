@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const authJwt = require("../middlewares/authMiddleware"); // Crew 회원 확인을 위한 middleware
-const authLoginCheck = require("../middlewares/authLoginCheck"); // 모임의 crew인지 확인
 const {
   sequelize,
   Users,
@@ -19,7 +18,16 @@ router.post("/boat/write", authJwt, async (req, res) => {
     // userId
     const { userId } = res.locals.user;
     // req.body로 작성 내용 받아오기
-    const { title, content, keyword, maxCrewNum, endDate, address } = req.body;
+    const {
+      title,
+      content,
+      keyword,
+      maxCrewNum,
+      endDate,
+      address,
+      latitude,
+      longitude,
+    } = req.body;
     // 첫 공개 여부는 공개로 올린다.
     const isDone = false;
     // user의 nickName 가져오기
@@ -54,6 +62,16 @@ router.post("/boat/write", authJwt, async (req, res) => {
         .status(412)
         .json({ errorMessage: "address가 작성된 내용이 없습니다." });
     }
+    if (latitude < 1) {
+      return res
+        .status(412)
+        .json({ errorMessage: "address가 작성된 내용이 없습니다." });
+    }
+    if (longitude < 1) {
+      return res
+        .status(412)
+        .json({ errorMessage: "address가 작성된 내용이 없습니다." });
+    }
 
     // Crew 모집 글 작성
     await Boats.create({
@@ -66,6 +84,8 @@ router.post("/boat/write", authJwt, async (req, res) => {
       address,
       maxCrewNum,
       isDone,
+      latitude,
+      longitude,
     });
     return res.status(200).json({ message: "Crew 모집 글 작성에 성공" });
   } catch (e) {
@@ -97,11 +117,12 @@ router.get("/boat/map", async (req, res) => {
           "crewNum",
         ],
         "address",
+        "latitude",
+        "longitude",
       ],
       group: ["Boats.boatId"],
       raw: true,
     });
-    console.log("asdfasdf", boats);
 
     // 작성된 모집 글이 없을 경우
     if (boats.length === 0) {
@@ -158,6 +179,7 @@ router.get("/boat/:boatId", authJwt, async (req, res) => {
           "crewNum",
         ],
         "endDate",
+        "address",
       ],
       where: { boatId },
       include: [

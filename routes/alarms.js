@@ -3,6 +3,27 @@ const router = express.Router();
 const authJwt = require("../middlewares/authMiddleware");
 const { Users, Boats, Crews, Alarms } = require("../models");
 
+// 0. 회원에 해당하는 알림 목록 조회 API
+//    @ 로그인한 회원을 확인
+//    @ Alarms 테이블을 통해 확인하기
+router.get("/boat/alarm", authJwt, async (req, res) => {
+  try {
+    // user 정보
+    const { userId } = req.locals.user;
+
+    // user 정보에 맞춰 알람 호출 해주기
+    const alarms = await Alarms.findAll({
+      attributes: ["alarmId", "isRead", "message"],
+      raw: true,
+    });
+  } catch (e) {
+    console.log(e);
+    return res
+      .status(400)
+      .json({ errorMessage: "알람 목록조회 실패. 요청이 올바르지 않습니다." });
+  }
+});
+
 // 1. 참가하기 API
 //    @ 로그인한 회원을 확인
 //    @ 글의 maxCrewNum와 crewNum을 확인해서 참가 가능 여부 설정
@@ -24,8 +45,8 @@ router.post("/boat/:boatId/join", authJwt, async (req, res) => {
         "maxCrewNum",
         [
           sequelize.literal(
-            `(SELECT COUNT(*) FROM Boats WHERE Boats.boatId = Crew.boatId )`
-          ) + 1,
+            `(SELECT COUNT(*) FROM Boats WHERE Boats.boatId = Crew.boatId) + 1`
+          ),
           "crewNum",
         ],
       ],

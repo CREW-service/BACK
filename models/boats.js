@@ -66,6 +66,14 @@ module.exports = (sequelize, DataTypes) => {
       endDate: {
         type: DataTypes.STRING,
       },
+      latitude: {
+        allowNull: false,
+        type: DataTypes.STRING,
+      },
+      longitude: {
+        allowNull: false,
+        type: DataTypes.STRING,
+      },
       address: {
         allowNull: false,
         type: DataTypes.STRING,
