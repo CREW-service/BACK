@@ -92,16 +92,16 @@ router.get("/boat/map", async (req, res) => {
         "maxCrewNum",
         [
           sequelize.literal(
-            `(SELECT COUNT(*) FROM Boats WHERE Boats.boatId = Crew.boatId )`
-          ) + 1,
+            `(SELECT COUNT(*) FROM Crews WHERE Boats.boatId = Crews.boatId) + 1`
+          ),
           "crewNum",
         ],
         "address",
       ],
       group: ["Boats.boatId"],
-      having: sequelize.literal("maxCrewNum > crewNum"),
       raw: true,
     });
+    console.log("asdfasdf", boats);
 
     // 작성된 모집 글이 없을 경우
     if (boats.length === 0) {
