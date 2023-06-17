@@ -153,8 +153,8 @@ router.get("/boat/:boatId", authJwt, async (req, res) => {
         "maxCrewNum",
         [
           sequelize.literal(
-            `(SELECT COUNT(*) FROM Boats WHERE Boats.boatId = Crew.boatId )`
-          ) + 1,
+            `(SELECT COUNT(*) FROM Crews WHERE Boats.boatId = Crews.boatId) + 1`
+          ),
           "crewNum",
         ],
         "endDate",
