@@ -252,7 +252,16 @@ router.put("/boat/:boatId", authJwt, async (req, res) => {
     // boat 조회
     const boat = await Boats.findOne({ where: { boatId } });
     // body로 입력받기
-    const { title, content, keyword, endDate, maxCrewNum, address } = req.body;
+    const {
+      title,
+      content,
+      keyword,
+      endDate,
+      maxCrewNum,
+      address,
+      latitude,
+      longitude,
+    } = req.body;
 
     // 모집 글이 없을 경우
     if (!boat) {
@@ -294,6 +303,16 @@ router.put("/boat/:boatId", authJwt, async (req, res) => {
         .status(412)
         .json({ errorMessage: "유효하지 않은 maxCrewNum입니다." });
     }
+    if (latitude < 1) {
+      return res
+        .status(412)
+        .json({ errorMessage: "유효하지 않은 latitude입니다." });
+    }
+    if (longitude < 1) {
+      return res
+        .status(412)
+        .json({ errorMessage: "유효하지 않은 longitude입니다." });
+    }
 
     // 수정할 내용에 따라 수정
     if (title) {
@@ -314,9 +333,26 @@ router.put("/boat/:boatId", authJwt, async (req, res) => {
     if (maxCrewNum) {
       boat.maxCrewNum = maxCrewNum;
     }
+    if (latitude) {
+      boat.latitude = latitude;
+    }
+    if (longitude) {
+      boat.longitude = longitude;
+    }
 
     // 수정할 부분이 모두 없을 경우 / 수정할 내용이 있다면 해당 부분만 수정
-    if (!(title || content || keyword || endDate || maxCrewNum || address)) {
+    if (
+      !(
+        title ||
+        content ||
+        keyword ||
+        endDate ||
+        maxCrewNum ||
+        address ||
+        latitude ||
+        longitude
+      )
+    ) {
       return res.status(412).json({ errorMessage: "수정할 내용이 없습니다." });
     }
     const updateCount = await boat.save();
