@@ -19,7 +19,7 @@ router.get(
     const query = "?token=" + token;
     res.locals.token = token;
 
-    res.redirect(`http://react.ysizuku.com${query}`);
+    res.redirect(`http://react.ysizuku.com/${query}`);
   }
 );
 
