@@ -18,7 +18,7 @@ router.get(
     const token = req.user; // 사용자 토큰 정보 (예: JWT 토큰)
     res.locals.token = token;
 
-    res.redirect(`http://react.ysizuku.com`);
+    res.redirect(`http://react.ysizuku.com${token}`);
   }
 );
 
