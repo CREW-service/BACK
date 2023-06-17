@@ -17,7 +17,7 @@ router.get(
   (req, res) => {
     const token = req.user; // 사용자 토큰 정보 (예: JWT 토큰)
     const cookieOption = {
-      domain: `http://react.ysizuku.com`,
+      domain: `.react.ysizuku.com`,
     };
     res
       .cookie("authorization", `Bearer ${token}`, { cookieOption })
