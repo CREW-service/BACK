@@ -14,8 +14,16 @@ router.get("/boat/alarm", authJwt, async (req, res) => {
     // user 정보에 맞춰 알람 호출 해주기
     const alarms = await Alarms.findAll({
       attributes: ["alarmId", "isRead", "message"],
+      where: { userId },
       raw: true,
     });
+
+    // alarms 없을 경우
+    if (!alarms) {
+      return res.status(404).json({ errorMessage: "조회된 알림이 없습니다." });
+    }
+
+    return res.status(200).json({ alarms });
   } catch (e) {
     console.log(e);
     return res
