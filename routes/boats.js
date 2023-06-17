@@ -80,10 +80,8 @@ router.post("/boat/write", authJwt, async (req, res) => {
 //      @ boatId, title, keyword, endDate, maxCrewNum, crewCount, address 조회
 //      @ 위치를 통해 MAP 위에 보트 모양과 keyword만 보이게 한다.
 //      @ 클릭할 경우 모집 글이 보이게 한다.
-router.get("/boat/map", authLoginCheck, async (req, res) => {
+router.get("/boat/map", async (req, res) => {
   try {
-    // Guest
-    const isGuest = res.locals.isGuest;
     // Crew 모집 글 목록 조회
     const boats = await Boats.findAll({
       attributes: [
@@ -112,18 +110,7 @@ router.get("/boat/map", authLoginCheck, async (req, res) => {
         .json({ errorMessage: "작성된 모집 글이 없습니다." });
     }
 
-    // guest인지 확인
-    if (isGuest === false) {
-      const alarms = await Alarms.findAll({
-        attributes: ["alarmId", "isRead", "message"],
-        raw: true,
-      });
-      // 회원가입 유저일 경우
-      return res.status(200).json({ boats, alarms });
-    } else {
-      // 게스트일 경우
-      return res.status(200).json({ boats });
-    }
+    return res.status(200).json({ boats });
   } catch (e) {
     console.log(e);
     return res
