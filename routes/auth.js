@@ -16,9 +16,12 @@ router.get(
   // kakaoStrategy에서 성공한다면 콜백 실행
   (req, res) => {
     const token = req.user; // 사용자 토큰 정보 (예: JWT 토큰)
+    const cookieOption = {
+      domain: `http://react.ysizuku.com`,
+    };
     res
-      .cookie("authorization", `Bearer ${token}`)
-      .redirect("http://react.ysizuku.com");
+      .cookie("authorization", `Bearer ${token}`, { cookieOption })
+      .redirect(`http://react.ysizuku.com`);
   }
 );
 

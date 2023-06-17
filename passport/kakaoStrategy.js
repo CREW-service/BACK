@@ -12,7 +12,6 @@ module.exports = () => {
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
-          console.log(profile);
           const exUser = await Users.findOne({
             where: {
               email: profile._json.kakao_account.email,
