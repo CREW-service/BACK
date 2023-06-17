@@ -1,19 +1,29 @@
+// import
 const express = require("express");
 const kakao = require("./passport/kakaoStrategy");
 const passport = require("passport");
 const path = require("path");
+// const cron = require("node-cron");
 require("dotenv").config();
 
+// router
 const authRouter = require("./routes/auth");
 const boatRouter = require("./routes/boats");
 const commentRouter = require("./routes/comments");
 const alarmRouter = require("./routes/alarms");
 const userRouter = require("./routes/users");
 
+// 설정
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const cors = require("cors");
 
+// schedule
+// cron.schedule('* * * * *', function () {
+
+// })
+// 1. second, 2.minute, 3.hour, 4.dat of month, 5.month, 6. day of week
+// app.use
 const app = express();
 
 app.use(
