@@ -4,6 +4,7 @@ const { Users } = require("../models");
 module.exports = async (req, res, next) => {
   try {
     const authorization = req.headers.authorization;
+    console.log(authorization);
 
     // 인증 토큰이 없는 경우 다음 미들웨어로 진행합니다.
     if (!authorization) {
