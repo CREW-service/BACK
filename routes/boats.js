@@ -219,20 +219,21 @@ router.get("/boat/:boatId", authJwt, async (req, res) => {
     const isCaptain = true;
 
     // captain, crewMember를 check해서 조회한 부분 다르게 보내기
-    if (userId === boat.userId) {
-      // captain
-      return res.status(200).json({ boat, crew, comments, isCaptain });
-    } else {
-      for (let i = 0; i < crew.length; i++) {
-        if (user.nickName === crew[i].nickName) {
-          // crew일 경우
-          return res.status(200).json({ boat, crew, comments });
-        } else {
-          // guest일 경우
-          return res.status(200).json({ boat });
-        }
-      }
-    }
+    // if (userId === boat.userId) {
+    //   // captain
+    //   return res.status(200).json({ boat, crew, comments, isCaptain });
+    // } else {
+    //   for (let i = 0; i < crew.length; i++) {
+    //     if (user.nickName === crew[i].nickName) {
+    //       // crew일 경우
+    //       return res.status(200).json({ boat, crew, comments });
+    //     } else {
+    //       // guest일 경우
+    //       return res.status(200).json({ boat });
+    //     }
+    //   }
+    // }
+    return res.status(200).json({ boat });
   } catch (e) {
     console.log(e);
     return res.status(400).json({
