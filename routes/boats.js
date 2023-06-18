@@ -143,7 +143,7 @@ router.get("/boat/map", async (req, res) => {
 // 3. Crew 모집 글 상세 조회 API
 //      @ <게스트용> boatId, title, content, keyword, maxCrewNum, crewCount, endDate, address 조회
 //      @ <Crew, 선장용> boatId, title, content, keyword, maxCrewNum, crewCount, endDate, address 조회
-router.get("/boat/:boatId", authJwt, async (req, res) => {
+router.get("/boat/:boatId", async (req, res) => {
   try {
     const { boatId } = req.params;
     // userId 확인
