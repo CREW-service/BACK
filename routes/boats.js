@@ -148,6 +148,7 @@ router.get("/boat/:boatId", loginMiddleware, async (req, res) => {
     const { boatId } = req.params;
     // userId 확인
     const userId = res.locals.user;
+    console.log(userId);
     // crewMember 조회
     const isReleased = false;
     const crew = await Crews.findAll({
