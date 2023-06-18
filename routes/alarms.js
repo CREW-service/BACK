@@ -38,6 +38,7 @@ router.get("/boat/alarm", authJwt, async (req, res) => {
 router.post("/join/:boatId", authJwt, async (req, res) => {
   try {
     // user 정보
+    console.log(req.locals.user);
     const { userId } = req.locals.user;
     const user = await Users.findOne({
       attributes: ["nickName"],
