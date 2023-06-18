@@ -21,6 +21,7 @@ module.exports = async (req, res, next) => {
 
     try {
       const { userId } = jwt.verify(tokenValue, process.env.JWT_SECRET);
+      console.log(userId);
       const user = await Users.findByPk(userId);
       res.locals.user = user;
       console.log(user);
