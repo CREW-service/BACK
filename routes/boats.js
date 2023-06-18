@@ -147,7 +147,7 @@ router.get("/boat/:boatId", loginMiddleware, async (req, res) => {
   try {
     const { boatId } = req.params;
     // userId 확인
-    const { userId } = res.locals.user;
+    const userId = res.locals.user;
     // crewMember 조회
     const isReleased = false;
     const crew = await Crews.findAll({
@@ -212,17 +212,18 @@ router.get("/boat/:boatId", loginMiddleware, async (req, res) => {
     const isCaptain = true;
 
     // captain, crewMember를 check해서 조회한 부분 다르게 보내기
-    if (userId === boat.userId) {
-      // captain
-      return res.status(200).json({ boat, crew, comments, isCaptain });
+    if (!userId) {
+      return res.status(200).json({ boat });
     } else {
-      for (let i = 0; i < crew.length; i++) {
-        if (userId === crew[i].userId) {
-          // crew일 경우
-          return res.status(200).json({ boat, crew, comments });
-        } else {
-          // guest일 경우
-          return res.status(200).json({ boat });
+      if (userId === boat.userId) {
+        // captain
+        return res.status(200).json({ boat, crew, comments, isCaptain });
+      } else {
+        for (let i = 0; i < crew.length; i++) {
+          if (userId === crew[i].userId) {
+            // crew일 경우
+            return res.status(200).json({ boat, crew, comments });
+          }
         }
       }
     }

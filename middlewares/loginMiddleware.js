@@ -9,12 +9,12 @@ module.exports = async (req, res, next) => {
       ? authorizationCookies
       : authorizationHeaders;
 
-    // 게스트일 경우
+    // 인증 토큰이 없는 경우 다음 미들웨어로 진행합니다.
     if (!authorization) {
-      return res.status(201).json({ errorMessage: "게스트입니다." });
+      return next();
     }
 
-    const [tokenType, tokenValue] = authorization.split(" "); // 중괄호{} 를 대괄호[]로 수정
+    const [tokenType, tokenValue] = authorization.split(" ");
     if (tokenType !== "Bearer") {
       res.clearCookie("authorization");
       return res
@@ -22,10 +22,15 @@ module.exports = async (req, res, next) => {
         .json({ errorMessage: "전달된 쿠키에서 오류가 발생하였습니다." });
     }
 
-    const { userId } = jwt.verify(tokenValue, process.env.JWT_SECRET);
-    const user = await Users.findByPk(userId);
+    try {
+      const { userId } = jwt.verify(tokenValue, process.env.JWT_SECRET);
+      const user = await Users.findByPk(userId);
+      res.locals.user = user;
+    } catch (error) {
+      // 토큰 검증이 실패하는 경우, 사용자를 게스트로 처리합니다.
+      console.log("토큰 검증 실패:", error);
+    }
 
-    res.locals.user = user;
     next();
   } catch (error) {
     return res.status(400).send({
