@@ -147,21 +147,21 @@ router.get("/boat/:boatId", authJwt, async (req, res) => {
   try {
     const { boatId } = req.params;
     // userId 확인
-    const { userId } = res.locals.user;
+    // const { userId } = res.locals.user;
     // userId를 통해 nickName 조회
-    const user = await Users.findOne({
-      attributes: ["nickName"],
-      where: { userId },
-      raw: true,
-    });
+    // const user = await Users.findOne({
+    //   attributes: ["nickName"],
+    //   where: { userId },
+    //   raw: true,
+    // });
     // crewMember 조회
-    const isReleased = false;
-    const crew = await Crews.findAll({
-      attributes: ["nickName"],
-      where: { boatId, isReleased },
-      group: ["Boats.boatId"],
-      raw: true,
-    });
+    // const isReleased = false;
+    // const crew = await Crews.findAll({
+    //   attributes: ["nickName"],
+    //   where: { boatId, isReleased },
+    //   group: ["Boats.boatId"],
+    //   raw: true,
+    // });
 
     // 글 조회
     const boat = await Boats.findOne({
@@ -194,27 +194,27 @@ router.get("/boat/:boatId", authJwt, async (req, res) => {
     });
 
     // 글이 없을 경우
-    if (!boat) {
-      return res.status(404).json({ errorMessage: "글이 존재하지 않습니다." });
-    }
+    // if (!boat) {
+    //   return res.status(404).json({ errorMessage: "글이 존재하지 않습니다." });
+    // }
 
-    // 글에 해당하는 댓글 조회
-    const comments = await Comments.findAll({
-      attributes: [
-        "commentId",
-        "userId",
-        [sequelize.col("nickname"), "nickname"],
-        "comment",
-      ],
-      where: { boatId },
-      include: [
-        {
-          model: Users,
-          attributes: [],
-        },
-      ],
-      raw: true,
-    });
+    // // 글에 해당하는 댓글 조회
+    // const comments = await Comments.findAll({
+    //   attributes: [
+    //     "commentId",
+    //     "userId",
+    //     [sequelize.col("nickname"), "nickname"],
+    //     "comment",
+    //   ],
+    //   where: { boatId },
+    //   include: [
+    //     {
+    //       model: Users,
+    //       attributes: [],
+    //     },
+    //   ],
+    //   raw: true,
+    //});
     // isCaptain으로 captain인 부분 알리기
     const isCaptain = true;
 
