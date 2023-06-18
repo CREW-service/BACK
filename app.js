@@ -34,6 +34,7 @@ app.use(
       "http://react.ysizuku.com",
     ],
     credentials: true,
+    withCredentials: true,
   })
 );
 
