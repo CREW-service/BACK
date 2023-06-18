@@ -41,6 +41,7 @@ router.post("/join/:boatId", authJwt, async (req, res) => {
     const { userId } = req.locals.user;
     const user = await Users.findOne({
       attributes: ["nickName"],
+      where: { userId },
       raw: true,
     });
     // params로 boatId
