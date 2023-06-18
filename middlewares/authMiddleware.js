@@ -23,8 +23,9 @@ module.exports = async (req, res, next) => {
     const { userId } = jwt.verify(tokenValue, process.env.JWT_SECRET);
     const user = await Users.findByPk(userId);
 
-    res.locals.user = user;
+    res.locals.user = user.dataValues;
     console.log(user);
+    console.log(user.dataValues);
     next();
   } catch (error) {
     console.log("error : ", error);
