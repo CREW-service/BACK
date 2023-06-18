@@ -18,7 +18,7 @@ module.exports = () => {
             },
           });
 
-          // 기존 사용자일 경우a
+          // 기존 사용자일 경우
           if (exUser) {
             const token = jwt.sign(
               {

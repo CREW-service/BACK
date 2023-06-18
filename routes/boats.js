@@ -180,6 +180,7 @@ router.get("/boat/:boatId", authJwt, async (req, res) => {
         ],
         "endDate",
         "address",
+        "createdAt",
       ],
       where: { boatId },
       include: [
