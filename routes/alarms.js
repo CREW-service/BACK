@@ -35,7 +35,7 @@ router.get("/boat/alarm", authJwt, async (req, res) => {
 // 1. 참가하기 API
 //    @ 로그인한 회원을 확인
 //    @ 글의 maxCrewNum와 crewNum을 확인해서 참가 가능 여부 설정
-router.post("/boat/:boatId/join", authJwt, async (req, res) => {
+router.post("/boat/join/:boatId", authJwt, async (req, res) => {
   try {
     // user 정보
     const { userId } = req.locals.user;
