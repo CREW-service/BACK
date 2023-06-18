@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const authJwt = require("../middlewares/authMiddleware"); // Crew 회원 확인을 위한 middleware
+const loginMiddleware = require("../middlewares/loginMiddleware"); // 로그인한 회원 확인을 위한 middleware
 const {
   sequelize,
   Users,
@@ -141,27 +142,19 @@ router.get("/boat/map", async (req, res) => {
 });
 
 // 3. Crew 모집 글 상세 조회 API
-//      @ <게스트용> boatId, title, content, keyword, maxCrewNum, crewCount, endDate, address 조회
 //      @ <Crew, 선장용> boatId, title, content, keyword, maxCrewNum, crewCount, endDate, address 조회
-router.get("/boat/:boatId", async (req, res) => {
+router.get("/boat/:boatId", loginMiddleware, async (req, res) => {
   try {
     const { boatId } = req.params;
     // userId 확인
-    // const { userId } = res.locals.user;
-    // userId를 통해 nickName 조회
-    // const user = await Users.findOne({
-    //   attributes: ["nickName"],
-    //   where: { userId },
-    //   raw: true,
-    // });
+    const { userId } = res.locals.user;
     // crewMember 조회
-    // const isReleased = false;
-    // const crew = await Crews.findAll({
-    //   attributes: ["nickName"],
-    //   where: { boatId, isReleased },
-    //   group: ["Boats.boatId"],
-    //   raw: true,
-    // });
+    const isReleased = false;
+    const crew = await Crews.findAll({
+      attributes: ["userId"],
+      where: { boatId, isReleased },
+      raw: true,
+    });
 
     // 글 조회
     const boat = await Boats.findOne({
@@ -194,46 +187,45 @@ router.get("/boat/:boatId", async (req, res) => {
     });
 
     // 글이 없을 경우
-    // if (!boat) {
-    //   return res.status(404).json({ errorMessage: "글이 존재하지 않습니다." });
-    // }
+    if (!boat) {
+      return res.status(404).json({ errorMessage: "글이 존재하지 않습니다." });
+    }
 
     // // 글에 해당하는 댓글 조회
-    // const comments = await Comments.findAll({
-    //   attributes: [
-    //     "commentId",
-    //     "userId",
-    //     [sequelize.col("nickname"), "nickname"],
-    //     "comment",
-    //   ],
-    //   where: { boatId },
-    //   include: [
-    //     {
-    //       model: Users,
-    //       attributes: [],
-    //     },
-    //   ],
-    //   raw: true,
-    //});
+    const comments = await Comments.findAll({
+      attributes: [
+        "commentId",
+        "userId",
+        [sequelize.col("nickname"), "nickname"],
+        "comment",
+      ],
+      where: { boatId },
+      include: [
+        {
+          model: Users,
+          attributes: [],
+        },
+      ],
+      raw: true,
+    });
     // isCaptain으로 captain인 부분 알리기
     const isCaptain = true;
 
     // captain, crewMember를 check해서 조회한 부분 다르게 보내기
-    // if (userId === boat.userId) {
-    //   // captain
-    //   return res.status(200).json({ boat, crew, comments, isCaptain });
-    // } else {
-    //   for (let i = 0; i < crew.length; i++) {
-    //     if (user.nickName === crew[i].nickName) {
-    //       // crew일 경우
-    //       return res.status(200).json({ boat, crew, comments });
-    //     } else {
-    //       // guest일 경우
-    //       return res.status(200).json({ boat });
-    //     }
-    //   }
-    // }
-    return res.status(200).json({ boat });
+    if (userId === boat.userId) {
+      // captain
+      return res.status(200).json({ boat, crew, comments, isCaptain });
+    } else {
+      for (let i = 0; i < crew.length; i++) {
+        if (userId === crew[i].userId) {
+          // crew일 경우
+          return res.status(200).json({ boat, crew, comments });
+        } else {
+          // guest일 경우
+          return res.status(200).json({ boat });
+        }
+      }
+    }
   } catch (e) {
     console.log(e);
     return res.status(400).json({
