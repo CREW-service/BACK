@@ -3,11 +3,7 @@ const { Users } = require("../models");
 
 module.exports = async (req, res, next) => {
   try {
-    const authorizationCookies = req.cookies.authorization;
-    const authorizationHeaders = req.headers.authorization;
-    const authorization = authorizationCookies
-      ? authorizationCookies
-      : authorizationHeaders;
+    const authorization = req.headers.authorization;
 
     // 인증 토큰이 없는 경우 다음 미들웨어로 진행합니다.
     if (!authorization) {
@@ -21,10 +17,10 @@ module.exports = async (req, res, next) => {
         .status(403)
         .json({ errorMessage: "전달된 쿠키에서 오류가 발생하였습니다." });
     }
+    console.log(tokenValue);
 
     try {
       const { userId } = jwt.verify(tokenValue, process.env.JWT_SECRET);
-      console.log(userId);
       const user = await Users.findByPk(userId);
       res.locals.user = user;
       console.log(user);
