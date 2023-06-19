@@ -9,7 +9,6 @@ const { Users, Boats, Crews, Alarms } = require("../models");
 router.get("/boat/alarm", authJwt, async (req, res) => {
   try {
     // user 정보
-    console.log(req.locals.user);
     const { userId } = req.locals.user;
 
     // user 정보에 맞춰 알람 호출 해주기
@@ -38,6 +37,7 @@ router.get("/boat/alarm", authJwt, async (req, res) => {
 //    @ 글의 maxCrewNum와 crewNum을 확인해서 참가 가능 여부 설정
 router.post("/boat/:boatId/join", authJwt, async (req, res) => {
   try {
+    console.log(req.locals.user);
     const { userId } = req.locals.user;
     const user = await Users.findOne({
       attributes: ["nickName"],
