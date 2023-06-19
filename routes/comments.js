@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { Crew, Comments, Boats } = require("../models");
+const { Crews, Comments, Boats } = require("../models");
 const authJwt = require("../middlewares/authMiddleware");
 
 // 1. 댓글 작성
@@ -25,7 +25,7 @@ router.post("/boat/:boatId/comment", authJwt, async (req, res) => {
     }
 
     // Crew인지 확인하기
-    const isExistCrew = await Crew.findOne({ where: { boatId, userId } });
+    const isExistCrew = await Crews.findOne({ where: { boatId, userId } });
     if (!isExistCrew) {
       return res.status(401).json({
         errorMessage: "모임에 참가하지 않아 댓글 작성 권한이 없습니다.",
@@ -38,7 +38,7 @@ router.post("/boat/:boatId/comment", authJwt, async (req, res) => {
     }
 
     // boatId에 맞춰서 댓글 작성
-    await Comments.create({ comment });
+    await Comments.create({ comment, boatId, userId });
 
     // 댓글 작성 완료
     return res.status(200).json({ message: "댓글 작성 완료." });
@@ -124,6 +124,12 @@ router.patch("/boat/:boatId/comment/:commentId", authJwt, async (req, res) => {
         .status(404)
         .json({ errorMessage: "존재하지 않는 댓글입니다." });
     }
+    // comment 권한 확인
+    if (userId !== comment.userId) {
+      return res
+        .status(401)
+        .json({ errorMessage: "댓글 수정 권한이 없습니다." });
+    }
 
     // deletedAt 확인
     if (deletedAt === undefined) {
@@ -134,7 +140,10 @@ router.patch("/boat/:boatId/comment/:commentId", authJwt, async (req, res) => {
       boat.deleteAt = deletedAt;
     }
     // 댓글 삭제
-    const deleteCount = await Comments.save();
+    const deleteCount = await Comments.update(
+      { deletedAt },
+      { where: { commentId, boatId, userId } }
+    );
     if (!deleteCount) {
       return res.status(404).json({ errorMessage: "삭제한 댓글이 없습니다." });
     }

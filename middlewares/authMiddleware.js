@@ -3,7 +3,7 @@ const { Users } = require("../models");
 
 module.exports = async (req, res, next) => {
   try {
-    const authorization = req.headers.authorization;
+    const authorization = req.cookies["authorization"];
 
     // # 403 Cookie가 존재하지 않을 경우
     if (!authorization) {
@@ -23,8 +23,14 @@ module.exports = async (req, res, next) => {
     const { userId } = jwt.verify(tokenValue, process.env.JWT_SECRET);
     const user = await Users.findByPk(userId);
 
-    res.locals.user = user;
-    next();
+    if (user) {
+      res.locals.user = user;
+      next();
+    } else {
+      return res
+        .status(403)
+        .json({ errorMessage: "로그인 필요한 기능입니다." });
+    }
   } catch (error) {
     console.log("error : ", error);
     res.clearCookie("authorization");

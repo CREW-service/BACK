@@ -1,5 +1,4 @@
 const express = require("express");
-const router = express.Router();
 const authJwt = require("../middlewares/authMiddleware"); // Crew 회원 확인을 위한 middleware
 const loginMiddleware = require("../middlewares/loginMiddleware"); // 로그인한 회원 확인을 위한 middleware
 const {
@@ -10,6 +9,7 @@ const {
   Crews,
   Alarms,
 } = require("../models");
+const router = express.Router();
 
 // 1. Crew 모집 글 작성 API
 //      @ 토큰을 검사하여, 유효한 토큰일 경우에만 채용공고 글 작성 가능
@@ -147,7 +147,7 @@ router.get("/boat/:boatId", loginMiddleware, async (req, res) => {
   try {
     const { boatId } = req.params;
     // userId 확인
-    const userId = res.locals.user;
+    const { userId } = res.locals.user;
     // crewMember 조회
     const isReleased = false;
     const crew = await Crews.findAll({
@@ -211,21 +211,28 @@ router.get("/boat/:boatId", loginMiddleware, async (req, res) => {
     // isCaptain으로 captain인 부분 알리기
     const isCaptain = true;
 
-    // captain, crewMember를 check해서 조회한 부분 다르게 보내기
+    // captain를 check해서 조회
     if (!userId) {
       return res.status(200).json({ boat });
-    } else {
-      if (userId === boat.userId) {
-        // captain
-        return res.status(200).json({ boat, crew, comments, isCaptain });
-      } else {
-        for (let i = 0; i < crew.length; i++) {
-          if (userId === crew[i].userId) {
-            // crew일 경우
-            return res.status(200).json({ boat, crew, comments });
-          }
-        }
+    }
+    if (userId === boat.userId) {
+      // captain
+      return res.status(200).json({ boat, crew, comments, isCaptain });
+    }
+
+    // crewMember일 경우
+    let isCrew = false;
+    for (let i = 0; i < crew.length; i++) {
+      if (userId === crew[i].userId) {
+        // crew일 경우
+        isCrew = true;
+        break;
       }
+    }
+    if (isCrew) {
+      return res.status(200).json({ boat, crew, comments });
+    } else {
+      return res.status(200).json({ boat });
     }
   } catch (e) {
     console.log(e);
@@ -240,10 +247,10 @@ router.get("/boat/:boatId", loginMiddleware, async (req, res) => {
 //    @ title, content, keyword, endDate, maxCrewNum, address 맞춰서 수정
 router.put("/boat/:boatId", authJwt, async (req, res) => {
   try {
-    // user
-    const { userId } = res.locals.user;
     // params로 boatId
     const { boatId } = req.params;
+    // user
+    const { userId } = res.locals.user;
     // boat 조회
     const boat = await Boats.findOne({ where: { boatId } });
     // body로 입력받기
@@ -263,7 +270,7 @@ router.put("/boat/:boatId", authJwt, async (req, res) => {
       return res.status(400).json({ errorMessage: "존재하지 않는 배입니다." });
     }
     // 권한이 없을 경우
-    if (userId !== boat.captain) {
+    if (userId !== boat.userId) {
       return res.status(403).json({ errorMessage: "글 수정 권한이 없습니다." });
     }
 
@@ -293,7 +300,7 @@ router.put("/boat/:boatId", authJwt, async (req, res) => {
         .status(412)
         .json({ errorMessage: "유효하지 않은 address입니다." });
     }
-    if ((maxCrewNum = 0)) {
+    if (maxCrewNum < 1) {
       return res
         .status(412)
         .json({ errorMessage: "유효하지 않은 maxCrewNum입니다." });
@@ -389,14 +396,14 @@ router.patch("/boat/:boatId", authJwt, async (req, res) => {
         .json({ errorMessage: "존재하지 않는 모집 글입니다." });
     }
     // 권한이 없을 경우
-    if (userId !== boat.captain) {
+    if (userId !== boat.userId) {
       return res
         .status(401)
         .json({ errorMessage: "모집 글 상태 전환 권한이 없습니다." });
     }
 
     // 유효성 검사
-    if (isDone === undefined) {
+    if (isDone === 3) {
       return res
         .status(412)
         .json({ errorMessage: "올바르지 않은 상태 전환 요청입니다." });
@@ -427,7 +434,7 @@ router.patch("/boat/:boatId", authJwt, async (req, res) => {
 router.patch("/boat/:boatId/delete", authJwt, async (req, res) => {
   try {
     // user
-    const userId = res.locals.user;
+    const { userId } = res.locals.user;
     // params로 boatId
     const { boatId } = req.params;
     // body로 deletedAt
@@ -442,8 +449,9 @@ router.patch("/boat/:boatId/delete", authJwt, async (req, res) => {
         .status(404)
         .json({ errorMessage: "존재하지 않는 글입니다. 삭제 실패." });
     }
+
     // 모집 글 삭제 권한 확인
-    if (userId !== boat.captain) {
+    if (userId !== boat.userId) {
       return res
         .status(401)
         .json({ errorMessage: "모집 글 삭제 권한이 없습니다." });

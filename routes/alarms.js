@@ -1,15 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const authJwt = require("../middlewares/authMiddleware");
-const { Users, Boats, Crews, Alarms } = require("../models");
+const { sequelize, Users, Boats, Crews, Alarms } = require("../models");
 
 // 0. 회원에 해당하는 알림 목록 조회 API
 //    @ 로그인한 회원을 확인
 //    @ Alarms 테이블을 통해 확인하기
-router.get("/boat/alarm", authJwt, async (req, res) => {
+router.get("/alarm", authJwt, async (req, res) => {
   try {
     // user 정보
-    const { userId } = req.locals.user;
+    const { userId } = res.locals.user;
 
     // user 정보에 맞춰 알람 호출 해주기
     const alarms = await Alarms.findAll({
@@ -37,8 +37,8 @@ router.get("/boat/alarm", authJwt, async (req, res) => {
 //    @ 글의 maxCrewNum와 crewNum을 확인해서 참가 가능 여부 설정
 router.post("/boat/:boatId/join", authJwt, async (req, res) => {
   try {
-    console.log(req.locals.user);
-    const { userId } = req.locals.user;
+    // user 정보
+    const { userId } = res.locals.user;
     const user = await Users.findOne({
       attributes: ["nickName"],
       where: { userId },
@@ -51,10 +51,11 @@ router.post("/boat/:boatId/join", authJwt, async (req, res) => {
     const boat = await Boats.findOne({
       attributes: [
         "userId",
+        "boatId",
         "maxCrewNum",
         [
           sequelize.literal(
-            `(SELECT COUNT(*) FROM Boats WHERE Boats.boatId = Crew.boatId) + 1`
+            `(SELECT COUNT(*) FROM Crews WHERE Boats.boatId = Crews.boatId) + 1`
           ),
           "crewNum",
         ],
@@ -103,7 +104,7 @@ router.post("/boat/:boatId/join", authJwt, async (req, res) => {
 router.post("/boat/:boatId/release", authJwt, async (req, res) => {
   try {
     // user 정보
-    const { userId } = req.locals.user;
+    const { userId } = res.locals.user;
     // params로 boatId
     const { boatId } = req.params;
     const boat = await Boats.findOne({
