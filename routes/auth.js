@@ -19,7 +19,7 @@ router.get(
     const query = "?token=" + token;
     res.locals.token = token;
 
-    res.redirect(`http://react.ysizuku.com/${query}`);
+    res.redirect(`http://localhost:3000/${query}`);
   }
 );
 
@@ -29,7 +29,7 @@ router.get("/auth/logout", (req, res) => {
       console.error(err);
       return res.redirect("/"); // 로그아웃 중 에러가 발생한 경우에 대한 처리
     }
-    res.redirect("http://react.ysizuku.com/"); // 로그아웃 성공 시 리다이렉트
+    res.redirect("http://localhost:3000/"); // 로그아웃 성공 시 리다이렉트
   });
 });
 module.exports = router;
