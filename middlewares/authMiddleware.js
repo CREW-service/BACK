@@ -13,6 +13,7 @@ module.exports = async (req, res, next) => {
     }
 
     const [tokenType, tokenValue] = authorization.split(" "); // 중괄호{} 를 대괄호[]로 수정
+    console.log(tokenValue);
     if (tokenType !== "Bearer") {
       res.clearCookie("authorization");
       return res
@@ -25,7 +26,6 @@ module.exports = async (req, res, next) => {
     const user = await Users.findByPk(userId);
 
     res.locals.user = user;
-    console.log(res.locals.user);
     next();
   } catch (error) {
     console.log("error : ", error);
