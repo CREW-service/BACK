@@ -8,7 +8,6 @@ module.exports = async (req, res, next) => {
     const authorization = authorizationCookies
       ? authorizationCookies
       : authorizationHeaders;
-    console.log(authorization);
 
     // 인증 토큰이 없는 경우 다음 미들웨어로 진행합니다.
     if (!authorization) {

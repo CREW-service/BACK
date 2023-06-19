@@ -231,9 +231,8 @@ router.get("/boat/:boatId", loginMiddleware, async (req, res) => {
     }
     if (isCrew) {
       return res.status(200).json({ boat, crew, comments });
-    } else {
-      return res.status(200).json({ boat });
     }
+    return res.status(200).json({ boat });
   } catch (e) {
     console.log(e);
     return res.status(400).json({
