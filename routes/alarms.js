@@ -37,7 +37,7 @@ router.get("/boat/alarm", authJwt, async (req, res) => {
 //    @ 글의 maxCrewNum와 crewNum을 확인해서 참가 가능 여부 설정
 router.post("/boat/:boatId/join", authJwt, async (req, res) => {
   try {
-    const { userId } = req.locals.user;
+    const userId = req.locals.user;
     const user = await Users.findOne({
       attributes: ["nickName"],
       where: { userId },
