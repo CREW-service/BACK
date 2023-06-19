@@ -1,14 +1,7 @@
 const express = require("express");
 const authJwt = require("../middlewares/authMiddleware"); // Crew 회원 확인을 위한 middleware
 const loginMiddleware = require("../middlewares/loginMiddleware"); // 로그인한 회원 확인을 위한 middleware
-const {
-  sequelize,
-  Users,
-  Boats,
-  Comments,
-  Crews,
-  Alarms,
-} = require("../models");
+const { sequelize, Users, Boats, Comments, Crews } = require("../models");
 const router = express.Router();
 
 // 1. Crew 모집 글 작성 API
