@@ -26,9 +26,8 @@ module.exports = async (req, res, next) => {
       where: { userId },
       raw: true,
     });
-    console.log(user);
 
-    res.locals.user = user;
+    res.locals.user = user.userId;
     next();
   } catch (error) {
     console.log("error : ", error);
