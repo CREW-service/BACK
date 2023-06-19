@@ -9,6 +9,7 @@ const { Users, Boats, Crews, Alarms } = require("../models");
 router.get("/boat/alarm", authJwt, async (req, res) => {
   try {
     // user 정보
+    console.log(req.locals.user);
     const { userId } = req.locals.user;
 
     // user 정보에 맞춰 알람 호출 해주기

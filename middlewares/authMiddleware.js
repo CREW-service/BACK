@@ -24,8 +24,6 @@ module.exports = async (req, res, next) => {
     const user = await Users.findByPk(userId);
 
     res.locals.user = user;
-    console.log(res.locals.user);
-    console.log(user);
     next();
   } catch (error) {
     console.log("error : ", error);
