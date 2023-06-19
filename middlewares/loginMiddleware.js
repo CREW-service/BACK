@@ -11,7 +11,7 @@ module.exports = async (req, res, next) => {
 
     // 인증 토큰이 없는 경우 다음 미들웨어로 진행합니다.
     if (!authorization) {
-      next();
+      return next(); // next() 호출 시 반환 값을 반환합니다.
     }
 
     const [tokenType, tokenValue] = authorization.split(" ");
@@ -31,10 +31,11 @@ module.exports = async (req, res, next) => {
       console.log("토큰 검증 실패:", error);
     }
 
-    next();
+    next(); // next() 호출 시 반환 값을 반환합니다.
   } catch (error) {
-    return res.status(400).send({
-      errorMessage: "loginMiddleware. 요청이 올바르지 않습니다.",
-    });
+    console.log(error);
+    return res
+      .status(400)
+      .json({ errorMessage: "loginMiddleware. 요청이 올바르지 않습니다." });
   }
 };
