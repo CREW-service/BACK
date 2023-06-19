@@ -68,6 +68,12 @@ router.post("/boat/:boatId/join", authJwt, async (req, res) => {
       return res.status(404).json({ errorMessage: "글이 존재하지 않습니다." });
     }
 
+    if (boat.userId === userId) {
+      return res
+        .status(400)
+        .json({ errorMessage: "본인이 작성한 글에는 참가할 수 없습니다." });
+    }
+
     // 값 설정
     const isReleased = false;
     const isRead = false;
