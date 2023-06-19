@@ -21,13 +21,10 @@ module.exports = async (req, res, next) => {
     }
 
     const { userId } = jwt.verify(tokenValue, process.env.JWT_SECRET);
-    const user = await Users.findOne({
-      attributes: ["userId", "email", "nickName"],
-      where: { userId },
-      raw: true,
-    });
+    const user = await Users.findByPk(userId);
+    console.log(user);
 
-    res.locals.user = user.userId;
+    res.locals.user = user;
     next();
   } catch (error) {
     console.log("error : ", error);

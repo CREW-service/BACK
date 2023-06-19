@@ -17,14 +17,11 @@ module.exports = async (req, res, next) => {
         .status(403)
         .json({ errorMessage: "전달된 쿠키에서 오류가 발생하였습니다." });
     }
-    console.log(tokenValue);
 
     try {
       const { userId } = jwt.verify(tokenValue, process.env.JWT_SECRET);
-      console.log(userId);
       const user = await Users.findByPk(userId);
       res.locals.user = user;
-      console.log(user);
     } catch (error) {
       // 토큰 검증이 실패하는 경우, 사용자를 게스트로 처리합니다.
       console.log("토큰 검증 실패:", error);

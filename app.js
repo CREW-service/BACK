@@ -64,20 +64,20 @@ passport.serializeUser((token, done) => {
   done(null, token);
 });
 
-passport.deserializeUser((token, done) => {
-  // 토큰을 이용하여 사용자를 인증 또는 사용자 정보를 가져오는 로직 구현
-  // 예시: 토큰에서 userId를 추출하여 사용자 정보를 가져옴
-  const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  const userId = decoded.userId;
+// passport.deserializeUser((token, done) => {
+//   // 토큰을 이용하여 사용자를 인증 또는 사용자 정보를 가져오는 로직 구현
+//   // 예시: 토큰에서 userId를 추출하여 사용자 정보를 가져옴
+//   const decoded = jwt.verify(token, process.env.JWT_SECRET);
+//   const userId = decoded.userId;
 
-  Users.findByPk(userId)
-    .then((user) => {
-      done(null, user); // 사용자 객체를 세션에서 가져옴
-    })
-    .catch((err) => {
-      done(err);
-    });
-});
+//   Users.findByPk(userId)
+//     .then((user) => {
+//       done(null, user); // 사용자 객체를 세션에서 가져옴
+//     })
+//     .catch((err) => {
+//       done(err);
+//     });
+// });
 
 kakao(); // kakaoStrategy.js의 module.exports를 실행합니다.
 
