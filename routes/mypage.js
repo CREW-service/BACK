@@ -12,8 +12,8 @@ router.get("/mypage", authJwt, async (req, res) => {
 
     // userId에 맞춰 작성한 글 가져오기
     const writedBoats = await Boats.findAll({
-      attributes: ["boatId", "title", "createdAt"],
-      where: { userId },
+      attributes: ["boatId", "title", "createdAt", "isDone"],
+      where: { userId, deletedAt: null },
       order: [["createdAt", "DESC"]],
       raw: true,
     });
@@ -31,8 +31,8 @@ router.get("/mypage", authJwt, async (req, res) => {
       const boatId = attendedBoatsData[i].boatId;
 
       const boat = await Boats.findOne({
-        attributes: ["boatId", "title", "createdAt"],
-        where: { boatId },
+        attributes: ["boatId", "title", "createdAt", "isDone"],
+        where: { boatId, deletedAt: null },
         raw: true,
       });
 

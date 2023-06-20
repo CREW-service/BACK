@@ -107,7 +107,7 @@ router.get("/boat/map", async (req, res) => {
         "maxCrewNum",
         [
           sequelize.literal(
-            `(SELECT COUNT(*) FROM Crews WHERE Boats.boatId = Crews.boatId) + 1`
+            `(SELECT COUNT(*) FROM Crews WHERE Boats.boatId = Crews.boatId AND Crews.isReleased = false) + 1`
           ),
           "crewNum",
         ],
@@ -161,7 +161,7 @@ router.get("/boat/:boatId", loginMiddleware, async (req, res) => {
         "maxCrewNum",
         [
           sequelize.literal(
-            `(SELECT COUNT(*) FROM Crews WHERE Boats.boatId = Crews.boatId) + 1`
+            `(SELECT COUNT(*) FROM Crews WHERE Boats.boatId = Crews.boatId AND Crews.isReleased = false) + 1`
           ),
           "crewNum",
         ],
@@ -169,7 +169,7 @@ router.get("/boat/:boatId", loginMiddleware, async (req, res) => {
         "address",
         "createdAt",
       ],
-      where: { boatId },
+      where: { boatId, isDone: false, deletedAt: null },
       include: [
         {
           model: Crews,
@@ -193,7 +193,7 @@ router.get("/boat/:boatId", loginMiddleware, async (req, res) => {
         [sequelize.col("nickname"), "nickname"],
         "comment",
       ],
-      where: { boatId },
+      where: { boatId, deletedAt: null },
       include: [
         {
           model: Users,

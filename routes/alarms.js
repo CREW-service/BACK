@@ -14,7 +14,7 @@ router.get("/alarm", authJwt, async (req, res) => {
     // user 정보에 맞춰 알람 호출 해주기
     const alarms = await Alarms.findAll({
       attributes: ["alarmId", "isRead", "message"],
-      where: { userId },
+      where: { userId, isRead: false },
       raw: true,
     });
 

@@ -1,14 +1,22 @@
 const cron = require("node-cron");
+const { Op } = require("sequelize");
 const { Boats } = require("./models");
 
 async function updateBoats() {
   const today = new Date().toISOString().split("T")[0];
   const boats = await Boats.findAll({
-    where: { endDate: today, isDone: false },
+    where: {
+      endDate: {
+        [Op.lte]: today,
+      },
+      isDone: false,
+    },
   });
 
+  console.log(boats.length);
   for (const boat of boats) {
     await boat.update({ isDone: true });
+    await boat.save();
     console.log(`Boat ${boat.boatId} marked as done`);
   }
 }
@@ -22,7 +30,7 @@ async function scheduleBoatsUpdate() {
   }
 }
 
-const scheduledTask = cron.schedule("0 12 * * *", scheduleBoatsUpdate, {
+const scheduledTask = cron.schedule("*/2 * * * * *", scheduleBoatsUpdate, {
   scheduled: true,
   timezone: "Asia/Seoul",
 });

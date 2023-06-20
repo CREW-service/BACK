@@ -3,7 +3,6 @@ const express = require("express");
 const kakao = require("./passport/kakaoStrategy");
 const passport = require("passport");
 const path = require("path");
-// const cron = require("node-cron");
 require("dotenv").config();
 
 // router
@@ -19,12 +18,6 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const cors = require("cors");
 
-// schedule
-// cron.schedule('* * * * *', function () {
-
-// })
-// 1. second, 2.minute, 3.hour, 4.dat of month, 5.month, 6. day of week
-// app.use
 const app = express();
 
 app.use(
