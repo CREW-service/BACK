@@ -38,7 +38,7 @@ router.get("/alarm", authJwt, async (req, res) => {
 router.post("/boat/:boatId/join", authJwt, async (req, res) => {
   try {
     // user 정보
-    const { userId } = res.locals.user;
+    const { userId, email } = res.locals.user;
     const user = await Users.findOne({
       attributes: ["nickName"],
       where: { userId },
@@ -52,6 +52,7 @@ router.post("/boat/:boatId/join", authJwt, async (req, res) => {
       attributes: [
         "userId",
         "boatId",
+        "email",
         "maxCrewNum",
         [
           sequelize.literal(
@@ -68,29 +69,32 @@ router.post("/boat/:boatId/join", authJwt, async (req, res) => {
       return res.status(404).json({ errorMessage: "글이 존재하지 않습니다." });
     }
 
-    if (boat.userId === userId) {
+    if (boat.email === email) {
       return res
         .status(400)
         .json({ errorMessage: "본인이 작성한 글에는 참가할 수 없습니다." });
+    } else {
+      // 이미 참가한 사용자인지 확인
+      const existingCrew = await Crews.findOne({
+        where: { userId, boatId },
+        raw: true,
+      });
+      if (existingCrew) {
+        return res.status(400).json({ errorMessage: "이미 참가한 글입니다." });
+      }
     }
-
-    // 값 설정
-    const isReleased = false;
-    const isRead = false;
-    const alarmMessage = `${user.nickName}님이 모임에 참가했습니다.`;
-
     // maxCrewNum, crewNum 숫자 비교
     if (boat.maxCrewNum > boat.crewNum) {
       await Crews.create({
         userId,
         boatId,
         nickName: user.nickName,
-        isReleased,
+        isReleased: false,
       });
       await Alarms.create({
         userId: boat.userId,
-        isRead,
-        message: alarmMessage,
+        isRead: false,
+        message: `${user.nickName}님이 모임에 참가했습니다.`,
       });
       return res.status(200).json({ message: "참가 성공." });
     } else {
@@ -110,11 +114,11 @@ router.post("/boat/:boatId/join", authJwt, async (req, res) => {
 router.post("/boat/:boatId/release", authJwt, async (req, res) => {
   try {
     // user 정보
-    const { userId } = res.locals.user;
+    const { userId, email } = res.locals.user;
     // params로 boatId
     const { boatId } = req.params;
     const boat = await Boats.findOne({
-      attributes: ["userId", "keyword"],
+      attributes: ["userId", "keyword", "email"],
       where: { boatId },
       raw: true,
     });
@@ -127,7 +131,7 @@ router.post("/boat/:boatId/release", authJwt, async (req, res) => {
     }
 
     // 권한이 있는지 확인하기
-    if (userId !== boat.userId) {
+    if (userId !== boat.userId || email !== boat.email) {
       return res
         .status(401)
         .json({ errorMessage: "모임 내보내기 권한이 없습니다." });
@@ -139,14 +143,11 @@ router.post("/boat/:boatId/release", authJwt, async (req, res) => {
       where: { boatId, nickName },
       raw: true,
     });
-    // 값 설정
-    const isReleased = true;
-    const isRead = false;
-    const alarmMessage = `${boat.keyword} 모임에서 내보내졌습니다.`;
+
     // crew 확인
     if (crew) {
       const updateCount = await Crews.update(
-        { isReleased: isReleased },
+        { isReleased: true },
         { where: { boatId, nickName } }
       );
       if (!updateCount) {
@@ -154,8 +155,8 @@ router.post("/boat/:boatId/release", authJwt, async (req, res) => {
       } else {
         await Alarms.create({
           userId: crew.userId,
-          isRead,
-          message: alarmMessage,
+          isRead: false,
+          message: `${boat.keyword} 모임에서 내보내졌습니다.`,
         });
         return res.status(200).json({ message: "내보내기 성공." });
       }

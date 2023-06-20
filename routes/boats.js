@@ -10,7 +10,7 @@ const router = express.Router();
 router.post("/boat/write", authJwt, async (req, res) => {
   try {
     // userId
-    const { userId } = res.locals.user;
+    const { userId, email } = res.locals.user;
     // req.body로 작성 내용 받아오기
     const {
       title,
@@ -70,6 +70,7 @@ router.post("/boat/write", authJwt, async (req, res) => {
     // Crew 모집 글 작성
     await Boats.create({
       userId,
+      email,
       captain: captain.nickName,
       title,
       content,
@@ -114,6 +115,7 @@ router.get("/boat/map", async (req, res) => {
         "latitude",
         "longitude",
       ],
+      where: { isDone: false, deletedAt: null },
       group: ["Boats.boatId"],
       raw: true,
     });
@@ -142,10 +144,9 @@ router.get("/boat/:boatId", loginMiddleware, async (req, res) => {
     // userId 확인
     const userId = res.locals.user ? res.locals.user.userId : null;
     // crewMember 조회
-    const isReleased = false;
     const crew = await Crews.findAll({
-      attributes: ["userId"],
-      where: { boatId, isReleased },
+      attributes: ["userId", "nickName"],
+      where: { boatId, isReleased: false },
       raw: true,
     });
 
@@ -153,7 +154,7 @@ router.get("/boat/:boatId", loginMiddleware, async (req, res) => {
     const boat = await Boats.findOne({
       attributes: [
         "boatId",
-        "userId",
+        ["userId", "captainId"],
         "captain",
         "title",
         "content",
@@ -201,16 +202,14 @@ router.get("/boat/:boatId", loginMiddleware, async (req, res) => {
       ],
       raw: true,
     });
-    // isCaptain으로 captain인 부분 알리기
-    const isCaptain = true;
 
     // captain를 check해서 조회
     if (!userId) {
-      return res.status(200).json({ boat });
+      return res.status(200).json({ boat, isguest: true });
     }
-    if (userId === boat.userId) {
+    if (userId === boat.captainId) {
       // captain
-      return res.status(200).json({ boat, crew, comments, isCaptain });
+      return res.status(200).json({ boat, crew, comments, isCaptain: true });
     }
 
     // crewMember일 경우
@@ -223,9 +222,9 @@ router.get("/boat/:boatId", loginMiddleware, async (req, res) => {
       }
     }
     if (isCrew) {
-      return res.status(200).json({ boat, crew, comments });
+      return res.status(200).json({ boat, crew, comments, isCrew: true });
     }
-    return res.status(200).json({ boat });
+    return res.status(200).json({ boat, isRegularMember: true });
   } catch (e) {
     console.log(e);
     return res.status(400).json({

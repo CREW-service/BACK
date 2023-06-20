@@ -18,6 +18,15 @@ module.exports = {
         },
         onDelete: "CASCADE",
       },
+      email: {
+        allowNull: false,
+        type: Sequelize.STRING,
+        references: {
+          model: "Users",
+          key: "email",
+        },
+        onDelete: "CASCADE",
+      },
       captain: {
         allowNull: false,
         type: Sequelize.STRING,

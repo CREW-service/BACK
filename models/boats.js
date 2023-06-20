@@ -43,6 +43,15 @@ module.exports = (sequelize, DataTypes) => {
         },
         onDelete: "CASCADE",
       },
+      email: {
+        allowNull: false,
+        type: DataTypes.STRING,
+        references: {
+          model: "Users",
+          key: "email",
+        },
+        onDelete: "CASCADE",
+      },
       captain: {
         allowNull: false,
         type: DataTypes.STRING,
