@@ -205,11 +205,13 @@ router.get("/boat/:boatId", loginMiddleware, async (req, res) => {
 
     // captain를 check해서 조회
     if (!userId) {
-      return res.status(200).json({ boat, isguest: true });
+      return res.status(200).json({ boat, personType: "person" });
     }
     if (userId === boat.captainId) {
       // captain
-      return res.status(200).json({ boat, crew, comments, isCaptain: true });
+      return res
+        .status(200)
+        .json({ boat, crew, comments, personType: "captain" });
     }
 
     // crewMember일 경우
@@ -222,9 +224,9 @@ router.get("/boat/:boatId", loginMiddleware, async (req, res) => {
       }
     }
     if (isCrew) {
-      return res.status(200).json({ boat, crew, comments, isCrew: true });
+      return res.status(200).json({ boat, crew, comments, personType: "crew" });
     }
-    return res.status(200).json({ boat, isRegularMember: true });
+    return res.status(200).json({ boat, personType: "person" });
   } catch (e) {
     console.log(e);
     return res.status(400).json({
