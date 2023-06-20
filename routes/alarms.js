@@ -61,6 +61,7 @@ router.post("/boat/:boatId/join", authJwt, async (req, res) => {
           "crewNum",
         ],
       ],
+      where: { boatId },
       raw: true,
     });
 
