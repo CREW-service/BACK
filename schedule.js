@@ -3,21 +3,20 @@ const { Op } = require("sequelize");
 const { Boats } = require("./models");
 
 async function updateBoats() {
-  const today = new Date().toISOString().split("T")[0];
+  const today = new Date();
   const boats = await Boats.findAll({
     where: {
-      endDate: {
-        [Op.lte]: today,
-      },
+      [Op.and]: [{ endDate: { [Op.not]: "" } }],
       isDone: false,
     },
+    raw: true,
   });
 
-  console.log(boats.length);
   for (const boat of boats) {
-    await boat.update({ isDone: true });
-    await boat.save();
-    console.log(`Boat ${boat.boatId} marked as done`);
+    if (new Date(boat.endDate) <= today) {
+      await Boats.update({ isDone: true }, { where: { boatId: boat.boatId } });
+      console.log(`Boat ${boat.boatId} 수정 완료`);
+    }
   }
 }
 
@@ -30,7 +29,7 @@ async function scheduleBoatsUpdate() {
   }
 }
 
-const scheduledTask = cron.schedule("*/2 * * * * *", scheduleBoatsUpdate, {
+const scheduledTask = cron.schedule("0 0 * * *", scheduleBoatsUpdate, {
   scheduled: true,
   timezone: "Asia/Seoul",
 });
