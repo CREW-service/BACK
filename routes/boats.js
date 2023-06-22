@@ -215,11 +215,13 @@ router.get("/boat/:boatId", loginMiddleware, async (req, res) => {
       return res.status(200).json(response);
     }
 
-    // crewMember일 경우
-    const crewMember = crew.find((cr) => cr.userId === userId);
-    if (crewMember) {
-      const response = { boat, crew, comments, personType: "crew" };
-      return res.status(200).json(response);
+    for (let i = 0; i < crew.length; i++) {
+      // crew일 경우
+      if (userId === crew[i].userId) {
+        return res
+          .status(200)
+          .json({ boat, crew, comments, personType: "crew" });
+      }
     }
     // guest일 경우
     const response = { boat, personType: "person" };
