@@ -9,7 +9,7 @@ const authJwt = require("../middlewares/authMiddleware");
 router.post("/boat/:boatId/comment", authJwt, async (req, res) => {
   try {
     // crew 확인
-    const { userId } = res.locals.user;
+    const { userId, nickName } = res.locals.user;
     // params로 boatId
     const { boatId } = req.params;
     // body로 comment 내용
@@ -24,24 +24,33 @@ router.post("/boat/:boatId/comment", authJwt, async (req, res) => {
         .json({ errorMessage: "모집 글이 존재하지 않습니다." });
     }
 
+    // captain일 경우 댓글 작성가능
+    const captain = boat.captain;
+    if (nickName === captain) {
+      await Comments.create({ comment, boatId, userId });
+      return res.status(200).json({ message: "댓글 작성 완료." });
+    }
+
     // Crew인지 확인하기
     const isExistCrew = await Crews.findOne({ where: { boatId, userId } });
     if (!isExistCrew) {
       return res.status(401).json({
         errorMessage: "모임에 참가하지 않아 댓글 작성 권한이 없습니다.",
       });
+    } else {
+      // 작성 내용 확인
+      if (comment < 1) {
+        return res
+          .status(412)
+          .json({ errorMessage: "작성한 내용이 없습니다." });
+      }
+
+      // boatId에 맞춰서 댓글 작성
+      await Comments.create({ comment, boatId, userId });
+
+      // 댓글 작성 완료
+      return res.status(200).json({ message: "댓글 작성 완료." });
     }
-
-    // 작성 내용 확인
-    if (comment < 1) {
-      return res.status(412).json({ errorMessage: "작성한 내용이 없습니다." });
-    }
-
-    // boatId에 맞춰서 댓글 작성
-    await Comments.create({ comment, boatId, userId });
-
-    // 댓글 작성 완료
-    return res.status(200).json({ message: "댓글 작성 완료." });
   } catch (e) {
     console.log(e);
     return res
