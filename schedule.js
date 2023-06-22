@@ -29,7 +29,7 @@ async function scheduleBoatsUpdate() {
   }
 }
 
-const scheduledTask = cron.schedule("0 0 * * *", scheduleBoatsUpdate, {
+const scheduledTask = cron.schedule("*/2 * * * * *", scheduleBoatsUpdate, {
   scheduled: true,
   timezone: "Asia/Seoul",
 });
