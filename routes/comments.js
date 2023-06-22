@@ -3,9 +3,9 @@ const router = express.Router();
 const { Crews, Comments, Boats } = require("../models");
 const authJwt = require("../middlewares/authMiddleware");
 
-// 1. 댓글 작성
-//      @ 토큰을 검사하여 접근 권한이 있는지 확인
-//      @ comment 작성
+/* 1. 댓글 작성
+     @ 토큰을 검사하여 접근 권한이 있는지 확인
+     @ comment 작성 */
 router.post("/boat/:boatId/comment", authJwt, async (req, res) => {
   try {
     // crew 확인
@@ -50,9 +50,9 @@ router.post("/boat/:boatId/comment", authJwt, async (req, res) => {
   }
 });
 
-// 2. 댓글 수정
-//    @ 토큰을 검사해서 작성자만 수정 가능
-//    @ comment 작성
+/* 2. 댓글 수정
+   @ 토큰을 검사해서 작성자만 수정 가능
+   @ comment 작성 */
 router.put("/boat/:boatId/comment/:commentId", authJwt, async (req, res) => {
   try {
     // user
@@ -62,14 +62,26 @@ router.put("/boat/:boatId/comment/:commentId", authJwt, async (req, res) => {
     // 수정한 comment
     const { comment } = req.body;
 
+    // boatId와 commentId를 동시에 조회
+    const boatAndComment = await Boats.findOne({
+      where: { boatId },
+      include: [
+        {
+          model: Comments,
+          where: { commentId },
+        },
+      ],
+    });
+
+    const boat = boatAndComment; // Boats 모델
+    const isExistComment = boatAndComment.Comments[0]; // Comments 모델
+
     // 모집 글 확인
-    const boat = await Boats.findOne({ where: { boatId } });
     if (!boat) {
       return res.status(404).json({ errorMessage: "crew 모집 글 조회 실패." });
     }
 
     // comment 글 확인
-    const isExistComment = await Comments.findByPk(commentId);
     if (!isExistComment) {
       return res
         .status(404)
@@ -98,8 +110,8 @@ router.put("/boat/:boatId/comment/:commentId", authJwt, async (req, res) => {
   }
 });
 
-// 3. 댓글 삭제
-//    @ 토큰을 검사하여 권한 확인하기
+/* 3. 댓글 삭제
+   @ 토큰을 검사하여 권한 확인하기 */
 router.patch("/boat/:boatId/comment/:commentId", authJwt, async (req, res) => {
   try {
     // user 확인

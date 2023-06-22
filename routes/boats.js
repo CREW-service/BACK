@@ -4,9 +4,9 @@ const loginMiddleware = require("../middlewares/loginMiddleware"); // 로그인�
 const { sequelize, Users, Boats, Comments, Crews } = require("../models");
 const router = express.Router();
 
-// 1. Crew 모집 글 작성 API
-//      @ 토큰을 검사하여, 유효한 토큰일 경우에만 채용공고 글 작성 가능
-//      @ title, content, keyword, maxCrewNum, endDate, address
+/* 1. Crew 모집 글 작성 API
+     @ 토큰을 검사하여, 유효한 토큰일 경우에만 채용공고 글 작성 가능
+     @ title, content, keyword, maxCrewNum, endDate, address */
 router.post("/boat/write", authJwt, async (req, res) => {
   try {
     // userId
@@ -91,10 +91,10 @@ router.post("/boat/write", authJwt, async (req, res) => {
   }
 });
 
-// 2. MAP API를 활용해 글 목록 조회 API
-//      @ boatId, title, keyword, endDate, maxCrewNum, crewCount, address 조회
-//      @ 위치를 통해 MAP 위에 보트 모양과 keyword만 보이게 한다.
-//      @ 클릭할 경우 모집 글이 보이게 한다.
+/* 2. MAP API를 활용해 글 목록 조회 API
+     @ boatId, title, keyword, endDate, maxCrewNum, crewCount, address 조회
+     @ 위치를 통해 MAP 위에 보트 모양과 keyword만 보이게 한다.
+     @ 클릭할 경우 모집 글이 보이게 한다. */
 router.get("/boat/map", async (req, res) => {
   try {
     // Crew 모집 글 목록 조회
@@ -136,8 +136,8 @@ router.get("/boat/map", async (req, res) => {
   }
 });
 
-// 3. Crew 모집 글 상세 조회 API
-//      @ <Crew, 선장용> boatId, title, content, keyword, maxCrewNum, crewCount, endDate, address 조회
+/* 3. Crew 모집 글 상세 조회 API
+     @ <Crew, 선장용> boatId, title, content, keyword, maxCrewNum, crewCount, endDate, address 조회 */
 router.get("/boat/:boatId", loginMiddleware, async (req, res) => {
   try {
     const { boatId } = req.params;
@@ -204,29 +204,26 @@ router.get("/boat/:boatId", loginMiddleware, async (req, res) => {
     });
 
     // captain를 check해서 조회
+    // 가입 유저(모임에 참여 X)
     if (!userId) {
-      return res.status(200).json({ boat, personType: "person" });
+      const response = { boat, personType: "person" };
+      return res.status(200).json(response);
     }
+    // captain일 경우
     if (userId === boat.captainId) {
-      // captain
-      return res
-        .status(200)
-        .json({ boat, crew, comments, personType: "captain" });
+      const response = { boat, crew, comments, personType: "captain" };
+      return res.status(200).json(response);
     }
 
     // crewMember일 경우
-    let isCrew = false;
-    for (let i = 0; i < crew.length; i++) {
-      if (userId === crew[i].userId) {
-        // crew일 경우
-        isCrew = true;
-        break;
-      }
+    const crewMember = crew.find((cr) => cr.userId === userId);
+    if (crewMember) {
+      const response = { boat, crew, comments, personType: "crew" };
+      return res.status(200).json(response);
     }
-    if (isCrew) {
-      return res.status(200).json({ boat, crew, comments, personType: "crew" });
-    }
-    return res.status(200).json({ boat, personType: "person" });
+    // guest일 경우
+    const response = { boat, personType: "person" };
+    return res.status(200).json(response);
   } catch (e) {
     console.log(e);
     return res.status(400).json({
@@ -235,9 +232,9 @@ router.get("/boat/:boatId", loginMiddleware, async (req, res) => {
   }
 });
 
-// 4. crew 모집 글 수정 API
-//    @ 토큰을 검사형, 해당 사용자가 작성한 채용공고 글만 수정 가능
-//    @ title, content, keyword, endDate, maxCrewNum, address 맞춰서 수정
+/* 4. crew 모집 글 수정 API
+   @ 토큰을 검사형, 해당 사용자가 작성한 채용공고 글만 수정 가능
+   @ title, content, keyword, endDate, maxCrewNum, address 맞춰서 수정 */
 router.put("/boat/:boatId", authJwt, async (req, res) => {
   try {
     // params로 boatId
@@ -369,8 +366,8 @@ router.put("/boat/:boatId", authJwt, async (req, res) => {
   }
 });
 
-// 5. crew 모집 글 공개 여부 API
-//    @ 토큰을 검사, 해당 사용자가 작성한 채용공고 글만 공개 / 비공개 가능
+/* 5. crew 모집 글 공개 여부 API
+   @ 토큰을 검사, 해당 사용자가 작성한 채용공고 글만 공개 / 비공개 가능 */
 router.patch("/boat/:boatId", authJwt, async (req, res) => {
   try {
     // user
@@ -422,8 +419,8 @@ router.patch("/boat/:boatId", authJwt, async (req, res) => {
   }
 });
 
-// 6. crew 모집 글 deletedAt
-//    @ 모집 글에 deletedAt 컬럼을 이용해 db에 남겨두지만 실제 서비스에서는 조회 X
+/* 6. crew 모집 글 deletedAt
+   @ 모집 글에 deletedAt 컬럼을 이용해 db에 남겨두지만 실제 서비스에서는 조회 X */
 router.patch("/boat/:boatId/delete", authJwt, async (req, res) => {
   try {
     // user
