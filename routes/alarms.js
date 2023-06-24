@@ -45,7 +45,7 @@ router.get("/alarm", loginMiddleware, async (req, res) => {
 router.post("/boat/:boatId/join", authJwt, async (req, res) => {
   try {
     // user 정보
-    const { userId, email } = res.locals.user;
+    const { userId } = res.locals.user;
     const user = await Users.findOne({
       attributes: ["nickName"],
       where: { userId },
@@ -59,7 +59,6 @@ router.post("/boat/:boatId/join", authJwt, async (req, res) => {
       attributes: [
         "userId",
         "boatId",
-        "email",
         "maxCrewNum",
         [
           sequelize.literal(
@@ -77,18 +76,23 @@ router.post("/boat/:boatId/join", authJwt, async (req, res) => {
       return res.status(404).json({ errorMessage: "글이 존재하지 않습니다." });
     }
 
-    if (boat.email === email) {
+    if (boat.userId === userId) {
       return res
         .status(400)
         .json({ errorMessage: "본인이 작성한 글에는 참가할 수 없습니다." });
     } else {
       // 이미 참가한 사용자인지 확인
       const existingCrew = await Crews.findOne({
+        attributes: ["userId", "isReleased"],
         where: { userId, boatId },
         raw: true,
       });
-      if (existingCrew) {
+      if (existingCrew.isReleased === false) {
         return res.status(400).json({ errorMessage: "이미 참가한 글입니다." });
+      } else if (existingCrew.isRelease === true) {
+        return res
+          .status(400)
+          .json({ errorMessage: "Captain의 권한으로 참가할 수 없습니다." });
       }
     }
     // maxCrewNum, crewNum 숫자 비교
@@ -122,11 +126,11 @@ router.post("/boat/:boatId/join", authJwt, async (req, res) => {
 router.post("/boat/:boatId/release", authJwt, async (req, res) => {
   try {
     // user 정보
-    const { userId, email } = res.locals.user;
+    const { userId } = res.locals.user;
     // params로 boatId
     const { boatId } = req.params;
     const boat = await Boats.findOne({
-      attributes: ["userId", "keyword", "email"],
+      attributes: ["userId", "title"],
       where: { boatId },
       raw: true,
     });
@@ -139,7 +143,7 @@ router.post("/boat/:boatId/release", authJwt, async (req, res) => {
     }
 
     // 권한이 있는지 확인하기
-    if (userId !== boat.userId || email !== boat.email) {
+    if (userId !== boat.userId) {
       return res
         .status(401)
         .json({ errorMessage: "모임 내보내기 권한이 없습니다." });
@@ -164,7 +168,7 @@ router.post("/boat/:boatId/release", authJwt, async (req, res) => {
         await Alarms.create({
           userId: crew.userId,
           isRead: false,
-          message: `${boat.keyword} 모임에서 내보내졌습니다.`,
+          message: `"${boat.title}" 모임에서 내보내졌습니다.`,
         });
         return res.status(200).json({ message: "내보내기 성공." });
       }
