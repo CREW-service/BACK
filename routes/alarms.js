@@ -1,29 +1,36 @@
 const express = require("express");
 const router = express.Router();
 const authJwt = require("../middlewares/authMiddleware");
+const loginMiddleware = require("../middlewares/loginMiddleware"); // 로그인한 회원 확인을 위한 middleware
 const { sequelize, Users, Boats, Crews, Alarms } = require("../models");
 
 /* 0. 회원에 해당하는 알림 목록 조회 API
    @ 로그인한 회원을 확인
    @ Alarms 테이블을 통해 확인하기 */
-router.get("/alarm", authJwt, async (req, res) => {
+router.get("/alarm", loginMiddleware, async (req, res) => {
   try {
-    // user 정보
-    const { userId } = res.locals.user;
+    // userId 확인
+    const userId = res.locals.user ? res.locals.user.userId : null;
 
     // user 정보에 맞춰 알람 호출 해주기
-    const alarms = await Alarms.findAll({
-      attributes: ["alarmId", "isRead", "message"],
-      where: { userId, isRead: false },
-      raw: true,
-    });
+    if (userId) {
+      const alarms = await Alarms.findAll({
+        attributes: ["alarmId", "isRead", "message"],
+        where: { userId, isRead: false },
+        raw: true,
+      });
 
-    // alarms 없을 경우
-    if (!alarms) {
-      return res.status(404).json({ errorMessage: "조회된 알림이 없습니다." });
+      // alarms 없을 경우
+      if (!alarms) {
+        return res
+          .status(404)
+          .json({ errorMessage: "조회된 알림이 없습니다." });
+      }
+      return res.status(200).json({ alarms });
     }
-
-    return res.status(200).json({ alarms });
+    if (userId === null) {
+      return res.status(200).json({ message: "게스트 입니다." });
+    }
   } catch (e) {
     console.log(e);
     return res
