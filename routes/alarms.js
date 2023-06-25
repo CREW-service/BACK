@@ -46,6 +46,38 @@ router.get("/alarm", loginMiddleware, async (req, res) => {
   }
 });
 
+/* 1. 알림 읽음 API
+    @ alarmId를 넘겨주면 그거에 해당하는 alarm을 isRead = true로 */
+router.put("/alarm/:alarmId", authJwt, async (req, res) => {
+  try {
+    // user 정보
+    const { userId } = res.locals.user;
+    // params로 alarmId
+    const { alarmId } = req.params;
+    const alarm = await Alarms.findOne({ where: { alarmId, userId } });
+    if (userId !== alarm.userId) {
+      return res
+        .status(401)
+        .json({ errorMessage: "알림 읽음 처리. 권한이 없습니다." });
+    }
+
+    // alarmId에 해당하는 부분 isRead 처리
+    const updateCount = await Alarms.update(
+      { isRead: true },
+      { where: { alarmId, userId } }
+    );
+    if (!updateCount) {
+      return res.status(404).json({ errorMessage: "알림 읽기 처리 실패." });
+    }
+    return res.status(200).json({ message: "알림 읽음 처리 성공." });
+  } catch (e) {
+    console.log(e);
+    return res
+      .status(400)
+      .json({ errorMessage: "알림 읽음 처리 실패. 요청이 올바르지 않습니다." });
+  }
+});
+
 /* 1. 참가하기 API
    @ 로그인한 회원을 확인
    @ 글의 maxCrewNum와 crewNum을 확인해서 참가 가능 여부 설정 */
