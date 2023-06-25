@@ -1,7 +1,14 @@
 const express = require("express");
 const authJwt = require("../middlewares/authMiddleware"); // Crew 회원 확인을 위한 middleware
 const loginMiddleware = require("../middlewares/loginMiddleware"); // 로그인한 회원 확인을 위한 middleware
-const { sequelize, Users, Boats, Comments, Crews } = require("../models");
+const {
+  sequelize,
+  Users,
+  Boats,
+  Comments,
+  Crews,
+  Alarms,
+} = require("../models");
 const router = express.Router();
 
 /* 1. Crew 모집 글 작성 API
@@ -422,11 +429,15 @@ router.patch("/boat/:boatId", authJwt, async (req, res) => {
 });
 
 /* 6. crew 모집 글 deletedAt
-   @ 모집 글에 deletedAt 컬럼을 이용해 db에 남겨두지만 실제 서비스에서는 조회 X */
+   @ 모집 글에 deletedAt 컬럼을 이용해 db에 남겨두지만 실제 서비스에서는 조회 X 
+   @ Crews 테이블에서 boatId에 해당하는 부분 삭제
+   @ Comments 테이블에서 boatId에 해당하는 부분 deletedAt으로
+   @ 삭제한 부분 알림으로 알리기 */
 router.patch("/boat/:boatId/delete", authJwt, async (req, res) => {
   try {
     // user
     const { userId } = res.locals.user;
+
     // params로 boatId
     const { boatId } = req.params;
     // body로 deletedAt
@@ -457,15 +468,35 @@ router.patch("/boat/:boatId/delete", authJwt, async (req, res) => {
     } else {
       boat.deletedAt = deletedAt;
     }
-    const deletedAtCount = await boat.save();
+    // crewMember 조회
+    const crewMember = await Crews.findAll({
+      attributes: ["userId"],
+      where: { boatId },
+      raw: true,
+    });
 
+    const deletedAtCount = await boat.save();
     // softDelete 안됐을 경우
     if (!deletedAtCount) {
       return res.status(404).json({ errorMessage: "삭제된 글이 없습니다." });
     }
+    if (deletedAtCount) {
+      // Crews 테이블에서 boatId에 해당하는 부분 삭제
+      await Crews.destroy({ where: { boatId } });
+      // Comments도 softdelete 상태 만들기
+      await Comments.update({ deletedAt: new Date() }, { where: { boatId } });
 
-    // 삭제 완료
-    return res.status(200).json({ message: "모집 글을 삭제 완료." });
+      // 삭제했다는 알림 만들기
+      for (let i = 0; i < crewMember.length; i++) {
+        await Alarms.create({
+          userId: crewMember[i].userId,
+          isRead: false,
+          message: `${boat.title} 글이 삭제됐습니다.`,
+        });
+      }
+      // 삭제 완료
+      return res.status(200).json({ message: "모집 글을 삭제 완료." });
+    }
   } catch (e) {
     console.log(e);
     return res.status(400).json({
