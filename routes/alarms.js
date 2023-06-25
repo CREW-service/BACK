@@ -146,7 +146,7 @@ router.post("/boat/:boatId/release", authJwt, async (req, res) => {
       raw: true,
     });
     // body로 내보낼 crew의 nickName 보내기
-    const { nickName } = req.body;
+    const { id } = req.body;
 
     // 글 확인
     if (!boat) {
@@ -163,7 +163,7 @@ router.post("/boat/:boatId/release", authJwt, async (req, res) => {
     // boatId로 crew 조회
     const crew = await Crews.findOne({
       attributes: ["userId"],
-      where: { boatId, nickName },
+      where: { boatId, userId: id },
       raw: true,
     });
 
@@ -171,7 +171,7 @@ router.post("/boat/:boatId/release", authJwt, async (req, res) => {
     if (crew) {
       const updateCount = await Crews.update(
         { isReleased: true },
-        { where: { boatId, nickName } }
+        { where: { boatId, userId: id } }
       );
       if (!updateCount) {
         return res.status(404).json({ errorMessage: "내보내기 실패." });
