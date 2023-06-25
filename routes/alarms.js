@@ -2,7 +2,14 @@ const express = require("express");
 const router = express.Router();
 const authJwt = require("../middlewares/authMiddleware");
 const loginMiddleware = require("../middlewares/loginMiddleware"); // 로그인한 회원 확인을 위한 middleware
-const { sequelize, Users, Boats, Crews, Alarms } = require("../models");
+const {
+  sequelize,
+  Users,
+  Boats,
+  Crews,
+  Alarms,
+  Comments,
+} = require("../models");
 
 /* 0. 회원에 해당하는 알림 목록 조회 API
    @ 로그인한 회원을 확인
@@ -182,6 +189,61 @@ router.post("/boat/:boatId/release", authJwt, async (req, res) => {
     return res
       .status(400)
       .json({ errorMessage: "내보내기 요청 실패. 요청이 올바르지 않습니다." });
+  }
+});
+
+/* 3. 나가기 API
+    @ 토큰을 검사하여 참여자 확인 후 나가기
+    @ Crews에서 삭제, 나가기 알람 생성(Captain한테 보내기), comment는 deletedAt 업데이트 시키기*/
+router.post("/boat/:boatId/exit", authJwt, async (req, res) => {
+  try {
+    //user 정보
+    const { userId } = res.locals.user;
+    const user = await Users.findOne({
+      attributes: ["nickName"],
+      where: { userId },
+      raw: true,
+    });
+    // params로 boatId
+    const { boatId } = req.params;
+
+    // 글 확인
+    const boat = await Boats.findOne({ where: { boatId } });
+    if (!boat) {
+      return res.status(404).json({ errorMessage: "글이 존재하지 않습니다." });
+    }
+
+    // Crew인지 확인
+    const crew = await Crews.findOne({ where: { userId, boatId } });
+    if (!crew) {
+      return res.status(404).json({ errorMessage: "crew가 아닙니다." });
+    }
+    // Crews table에서 삭제
+    const deleteCount = await Crews.destroy({ where: { userId, boatId } });
+    if (deleteCount < 1) {
+      return res.status(401).json({
+        errorMessage: "나가기가 정상적으로 처리되지 않았습니다.",
+      });
+    }
+
+    // 작성했던 comment deletedAt으로 처리하기
+    await Comments.update(
+      { deletedAt: new Date() },
+      { where: { boatId, userId } }
+    );
+
+    // 알람생성
+    await Alarms.create({
+      userId: boat.userId,
+      isRead: false,
+      message: `${user.nickName}님이 모임에 나갔습니다.`,
+    });
+    return res.status(200).json({ message: "나가기 성공." });
+  } catch (e) {
+    console.log(e);
+    return res
+      .status(400)
+      .json({ errorMessage: "나가기 실패. 요청이 올바르지 않습니다." });
   }
 });
 module.exports = router;
