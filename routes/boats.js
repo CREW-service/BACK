@@ -176,6 +176,8 @@ router.get("/boat/:boatId", loginMiddleware, async (req, res) => {
         "endDate",
         "address",
         "createdAt",
+        "latitude",
+        "longitude",
       ],
       where: { boatId, isDone: false, deletedAt: null },
       include: [
