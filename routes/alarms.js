@@ -90,26 +90,29 @@ router.post("/boat/:boatId/join", authJwt, async (req, res) => {
     } else {
       // 이미 참가한 사용자인지 확인
       const existingCrew = await Crews.findOne({
-        attributes: ["userId", "isReleased"],
         where: { userId, boatId },
         raw: true,
       });
-      if (existingCrew.isReleased === false) {
-        return res.status(400).json({ errorMessage: "이미 참가한 글입니다." });
-      } else if (existingCrew.isRelease === true) {
-        return res
-          .status(400)
-          .json({ errorMessage: "Captain의 권한으로 참가할 수 없습니다." });
+      if (existingCrew) {
+        if (existingCrew.isReleased === false) {
+          return res
+            .status(400)
+            .json({ errorMessage: "이미 참가한 글입니다." });
+        } else if (existingCrew.isReleased === true) {
+          return res
+            .status(400)
+            .json({ errorMessage: "Captain의 권한으로 참가할 수 없습니다." });
+        }
       }
     }
-    const isReleased = false;
+
     // maxCrewNum, crewNum 숫자 비교
     if (boat.maxCrewNum > boat.crewNum) {
       await Crews.create({
         userId,
         boatId,
         nickName: user.nickName,
-        isReleased,
+        isReleased: false,
       });
       await Alarms.create({
         userId: boat.userId,
