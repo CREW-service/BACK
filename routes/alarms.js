@@ -102,13 +102,14 @@ router.post("/boat/:boatId/join", authJwt, async (req, res) => {
           .json({ errorMessage: "Captain의 권한으로 참가할 수 없습니다." });
       }
     }
+    const isReleased = false;
     // maxCrewNum, crewNum 숫자 비교
     if (boat.maxCrewNum > boat.crewNum) {
       await Crews.create({
         userId,
         boatId,
         nickName: user.nickName,
-        isReleased: false,
+        isReleased,
       });
       await Alarms.create({
         userId: boat.userId,
