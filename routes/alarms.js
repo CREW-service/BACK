@@ -87,23 +87,24 @@ router.post("/boat/:boatId/join", authJwt, async (req, res) => {
       return res
         .status(400)
         .json({ errorMessage: "본인이 작성한 글에는 참가할 수 없습니다." });
-    } else {
-      // 이미 참가한 사용자인지 확인
-      const existingCrew = await Crews.findOne({
-        where: { userId, boatId },
-        raw: true,
-      });
-      if (existingCrew) {
-        if (existingCrew.isReleased === false) {
-          return res
-            .status(400)
-            .json({ errorMessage: "이미 참가한 글입니다." });
-        } else if (existingCrew.isReleased === true) {
-          return res
-            .status(400)
-            .json({ errorMessage: "Captain의 권한으로 참가할 수 없습니다." });
-        }
-      }
+    }
+    // 이미 참가한 사용자인지 확인
+    const existingCrew = await Crews.findOne({
+      where: { userId, boatId, isReleased: false },
+      raw: true,
+    });
+    const isReleasedCrew = await Crews.findOne({
+      where: { userId, boatId, isReleased: true },
+      raw: true,
+    });
+
+    if (existingCrew) {
+      return res.status(400).json({ errorMessage: "이미 참가한 글입니다." });
+    }
+    if (isReleasedCrew) {
+      return res
+        .status(400)
+        .json({ errorMessage: "Captain의 권한으로 참가할 수 없습니다." });
     }
 
     // maxCrewNum, crewNum 숫자 비교
