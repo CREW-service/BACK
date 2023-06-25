@@ -25,7 +25,7 @@ router.get("/mypage", authJwt, async (req, res) => {
     // crews 테이블에서 참여한 boatId 찾기
     const attendedBoatsDataPromise = await Crews.findAll({
       attributes: ["boatId"],
-      where: { userId },
+      where: { userId, isReleased: false },
       raw: true,
     });
 
