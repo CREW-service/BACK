@@ -164,6 +164,7 @@ router.get("/boat/:boatId", loginMiddleware, async (req, res) => {
         ["userId", "captainId"],
         "captain",
         "title",
+        "keyword",
         "content",
         "maxCrewNum",
         [
