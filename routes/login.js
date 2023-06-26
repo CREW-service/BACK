@@ -16,7 +16,10 @@ router.get("/login", async (req, res) => {
       process.env.JWT_SECRET
     );
 
-    res.cookie("authorization", `Bearer ${token}`);
+    const query = "?token=" + token;
+    res.locals.token = token;
+
+    res.redirect(`http://localhost:3000/${query}`);
 
     return res.status(201).json({ token: token, message: "로그인 성공" });
   } catch (error) {
