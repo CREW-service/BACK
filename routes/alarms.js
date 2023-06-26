@@ -19,6 +19,9 @@ router.get("/alarm", loginMiddleware, async (req, res) => {
     // userId 확인
     const userId = res.locals.user ? res.locals.user.userId : null;
 
+    if (userId === null) {
+      return res.status(200).json({ message: "게스트 입니다." });
+    }
     // user 정보에 맞춰 알람 호출 해주기
     if (userId) {
       const alarms = await Alarms.findAll({
@@ -34,9 +37,6 @@ router.get("/alarm", loginMiddleware, async (req, res) => {
           .json({ errorMessage: "조회된 알림이 없습니다." });
       }
       return res.status(200).json({ alarms });
-    }
-    if (userId === null) {
-      return res.status(200).json({ message: "게스트 입니다." });
     }
   } catch (e) {
     console.log(e);
