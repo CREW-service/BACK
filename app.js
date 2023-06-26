@@ -127,6 +127,12 @@ app.use("/", [
   commentRouter,
 ]);
 
+app.get("/healthCheck", function (req, res) {
+  res.writeHead(200, { "Content-Type": "text/html" });
+  res.write("Health Check Page");
+  res.end();
+});
+
 const PORT = 3000;
 app.listen(PORT, () => {
   console.log(PORT, "포트 번호로 서버가 실행되었습니다.");
