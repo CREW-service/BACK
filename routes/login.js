@@ -6,13 +6,12 @@ const authJwt = require("../middlewares/authMiddleware");
 
 //로그인
 router.post("/login", async (req, res) => {
-  const { email } = req.body;
   try {
-    const user = await Users.findOne({ where: { email } });
+    const userId = 3;
 
     const token = jwt.sign(
       {
-        userId: user.userId,
+        userId,
       },
       process.env.JWT_SECRET
     );
