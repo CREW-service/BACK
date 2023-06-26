@@ -68,6 +68,7 @@ app.use(
       "*.ysizuku.com",
       "http://localhost:3000",
       "http://react.ysizuku.com",
+      "https://react.ysizuku.com",
     ],
     credentials: true,
     withCredentials: true,
