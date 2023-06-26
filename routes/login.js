@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 const authJwt = require("../middlewares/authMiddleware");
 
 //로그인
-router.post("/login", async (req, res) => {
+router.get("/login", async (req, res) => {
   try {
     const userId = 3;
 
