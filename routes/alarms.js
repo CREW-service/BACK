@@ -28,7 +28,7 @@ router.get("/alarm", loginMiddleware, async (req, res) => {
       });
 
       // alarms 없을 경우
-      if (!alarms) {
+      if (!alarms || alarms.length === 0) {
         return res
           .status(404)
           .json({ errorMessage: "조회된 알림이 없습니다." });
