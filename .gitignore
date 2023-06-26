@@ -1,10 +1,6 @@
 # Node.js dependencies
 node_modules/
 
-# Sequelize configuration
-config/
-config/config.json
-
 # draw.io backup files
 *.bkp
 
