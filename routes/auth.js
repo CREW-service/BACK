@@ -24,12 +24,14 @@ router.get(
 );
 
 router.get("/auth/logout", (req, res) => {
-  req.logout(function (err) {
-    if (err) {
-      console.error(err);
-      return res.redirect("/"); // 로그아웃 중 에러가 발생한 경우에 대한 처리
-    }
-    res.redirect("http://react.ysizuku.com"); // 로그아웃 성공 시 리다이렉트
-  });
+  try {
+    req.cookies.destroy((err) => {
+      req.logout();
+      res.redirect(`https://react.ysizuku.com`);
+    });
+  } catch (e) {
+    console.error(e.message);
+    throw new Error("로그아웃 실패");
+  }
 });
 module.exports = router;
