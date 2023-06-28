@@ -202,6 +202,7 @@ router.get("/boat/:boatId", loginMiddleware, async (req, res) => {
         "userId",
         [sequelize.col("nickname"), "nickname"],
         "comment",
+        "createdAt",
       ],
       where: { boatId, deletedAt: null },
       include: [
