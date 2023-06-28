@@ -292,7 +292,7 @@ router.put("/boat/:boatId", authJwt, async (req, res) => {
         .status(412)
         .json({ errorMessage: "유효하지 않은 keyword입니다." });
     }
-    if (endDate < 1) {
+    if (endDate === undefined) {
       return res
         .status(412)
         .json({ errorMessage: "유효하지 않은 endDate입니다." });

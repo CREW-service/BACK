@@ -19,7 +19,7 @@ router.get(
     const query = "?token=" + token;
     res.locals.token = token;
 
-    res.redirect(`https://react.ysizuku.com/${query}`);
+    res.redirect(`http://localhost:3000/${query}`);
   }
 );
 
@@ -27,7 +27,7 @@ router.get("/auth/logout", (req, res) => {
   try {
     req.cookies.destroy((err) => {
       req.logout();
-      res.redirect(`https://react.ysizuku.com`);
+      res.redirect(`http://localhost:3000`);
     });
   } catch (e) {
     console.error(e.message);
