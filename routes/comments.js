@@ -149,7 +149,7 @@ router.patch("/boat/:boatId/comment/:commentId", authJwt, async (req, res) => {
     if (userId !== comment.userId) {
       return res
         .status(401)
-        .json({ errorMessage: "댓글 수정 권한이 없습니다." });
+        .json({ errorMessage: "댓글 삭제 권한이 없습니다." });
     }
 
     // deletedAt 확인
