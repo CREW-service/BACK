@@ -117,7 +117,7 @@ router.post("/boat/:boatId/join", authJwt, async (req, res) => {
 
     if (boat.userId === userId) {
       return res
-        .status(400)
+        .status(403)
         .json({ errorMessage: "본인이 작성한 글에는 참가할 수 없습니다." });
     }
     // 이미 참가한 사용자인지 확인
@@ -131,11 +131,11 @@ router.post("/boat/:boatId/join", authJwt, async (req, res) => {
     });
 
     if (existingCrew) {
-      return res.status(400).json({ errorMessage: "이미 참가한 글입니다." });
+      return res.status(403).json({ errorMessage: "이미 참가한 글입니다." });
     }
     if (isReleasedCrew) {
       return res
-        .status(400)
+        .status(401)
         .json({ errorMessage: "Captain의 권한으로 참가할 수 없습니다." });
     }
 
@@ -178,7 +178,7 @@ router.post("/boat/:boatId/release", authJwt, async (req, res) => {
       where: { boatId },
       raw: true,
     });
-    // body로 내보낼 crew의 nickName 보내기
+    // body
     const { id } = req.body;
 
     // 글 확인
