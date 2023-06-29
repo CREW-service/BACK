@@ -53,6 +53,11 @@ router.post("/boat/write", authJwt, async (req, res) => {
         .status(412)
         .json({ errorMessage: "keyword에 작성된 내용이 없습니다." });
     }
+    if (maxCrewNum < 1) {
+      return res
+        .status(412)
+        .json({ errorMessage: "모집 인원에 작성된 내용이 없습니다." });
+    }
     if (endDate === undefined) {
       return res
         .status(412)
@@ -66,12 +71,12 @@ router.post("/boat/write", authJwt, async (req, res) => {
     if (latitude < 1) {
       return res
         .status(412)
-        .json({ errorMessage: "address가 작성된 내용이 없습니다." });
+        .json({ errorMessage: "latitude가 작성된 내용이 없습니다." });
     }
     if (longitude < 1) {
       return res
         .status(412)
-        .json({ errorMessage: "address가 작성된 내용이 없습니다." });
+        .json({ errorMessage: "longitude가 작성된 내용이 없습니다." });
     }
 
     // Crew 모집 글 작성
@@ -130,7 +135,7 @@ router.get("/boat/map", async (req, res) => {
     // 작성된 모집 글이 없을 경우
     if (boats.length === 0) {
       return res
-        .status(400)
+        .status(404)
         .json({ errorMessage: "작성된 모집 글이 없습니다." });
     }
 
@@ -200,7 +205,7 @@ router.get("/boat/:boatId", loginMiddleware, async (req, res) => {
       attributes: [
         "commentId",
         "userId",
-        [sequelize.col("nickname"), "nickname"],
+        [sequelize.col("nickName"), "nickName"],
         "comment",
         "createdAt",
       ],
@@ -423,7 +428,12 @@ router.patch("/boat/:boatId", authJwt, async (req, res) => {
     }
 
     // 전환 완료
-    return res.status(200).json({ message: "모집 글 상태를 전환 완료." });
+    if (isDone === false) {
+      return res.status(200).json({ message: "crew 모집 글 공개 완료" });
+    }
+    if (isDone === true) {
+      return res.status(200).json({ message: "crew 모집 글 비공개 완료" });
+    }
   } catch (e) {
     console.log(e);
     return res
@@ -452,9 +462,7 @@ router.patch("/boat/:boatId/delete", authJwt, async (req, res) => {
 
     // 모집 글이 없을 경우
     if (!boat) {
-      return res
-        .status(404)
-        .json({ errorMessage: "존재하지 않는 글입니다. 삭제 실패." });
+      return res.status(404).json({ errorMessage: "존재하지 않는 글입니다." });
     }
 
     // 모집 글 삭제 권한 확인
