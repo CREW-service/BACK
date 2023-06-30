@@ -23,7 +23,7 @@ router.get(
   }
 );
 
-router.get("/auth/logout", (req, res) => {
+router.get("/auth/logout", passport.authenticate("kakao"), (req, res) => {
   try {
     req.logout();
     res.clearCookie("authorization");
