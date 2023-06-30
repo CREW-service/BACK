@@ -25,10 +25,9 @@ router.get(
 
 router.get("/auth/logout", (req, res) => {
   try {
-    req.cookies.destroy((err) => {
-      req.logout();
-      res.redirect(`http://localhost:3000`);
-    });
+    req.logout();
+    res.clearCookie("authorization");
+    res.redirect(`http://localhost:3000`);
   } catch (e) {
     console.error(e.message);
     throw new Error("로그아웃 실패");
