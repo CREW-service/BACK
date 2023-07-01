@@ -33,13 +33,13 @@ module.exports = async (req, res, next) => {
     } else {
       return res
         .status(403)
-        .json({ errorMessage: "로그인 필요한 기능입니다." });
+        .json({ errorMessage: "회원정보가 없습니다. 회원가입이 필요합니다." });
     }
   } catch (error) {
     console.log("error : ", error);
     res.clearCookie("authorization");
     return res.status(403).json({
-      errorMessage: "로그인이 필요한 기능입니다.<catch>",
+      errorMessage: "로그인 요청이 올바르지 않습니다.",
     });
   }
 };
