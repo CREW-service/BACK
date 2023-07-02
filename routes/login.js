@@ -5,21 +5,33 @@ const jwt = require("jsonwebtoken");
 const authJwt = require("../middlewares/authMiddleware");
 
 //로그인
-router.get("/login", async (req, res) => {
+router.post("/login", async (req, res) => {
   try {
-    const userId = 3;
+    // const userId = 3;
 
+    // const token = jwt.sign(
+    //   {
+    //     userId,
+    //   },
+    //   process.env.JWT_SECRET
+    // );
+
+    // const query = "?token=" + token;
+    // res.locals.token = token;
+
+    // res.redirect(`http://localhost:3000/${query}`);
+    const { email } = req.body;
+
+    const user = await Users.findOne({
+      where: { email },
+    });
     const token = jwt.sign(
       {
-        userId,
+        userId: user.userId,
       },
       process.env.JWT_SECRET
     );
-
-    const query = "?token=" + token;
-    res.locals.token = token;
-
-    res.redirect(`http://localhost:3000/${query}`);
+    res.cookie("authorization", `Bearer ${token}`);
 
     return res.status(201).json({ token: token, message: "로그인 성공" });
   } catch (error) {

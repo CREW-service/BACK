@@ -184,7 +184,7 @@ router.get("/boat/:boatId", loginMiddleware, async (req, res) => {
         "latitude",
         "longitude",
       ],
-      where: { boatId, isDone: false, deletedAt: null },
+      where: { boatId, deletedAt: null },
       include: [
         {
           model: Crews,
@@ -365,6 +365,10 @@ router.put("/boat/:boatId", authJwt, async (req, res) => {
     ) {
       return res.status(412).json({ errorMessage: "수정할 내용이 없습니다." });
     }
+
+    // isDone 부분
+    const isDone = false;
+    boat.isDone = isDone;
     const updateCount = await boat.save();
 
     // 수정한 글이 없을 경우

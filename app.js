@@ -1,8 +1,11 @@
 // import
 const express = require("express");
+const app = express();
 const kakao = require("./passport/kakaoStrategy");
 const passport = require("passport");
 const path = require("path");
+const http = require("http");
+const server = http.createServer(app);
 require("dotenv").config();
 
 // node-cron
@@ -60,8 +63,6 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const cors = require("cors");
 
-const app = express();
-
 app.use(
   cors({
     origin: [
@@ -94,6 +95,22 @@ app.use(
   })
 );
 
+const io = require("socket.io")(server, {
+  cors: {
+    methods: ["GET", "POST"],
+    origin: [
+      "*.ysizuku.com",
+      "http://localhost:3000",
+      "http://react.ysizuku.com",
+      "https://react.ysizuku.com",
+    ],
+    credentials: true,
+  },
+});
+
+const socketHandlers = require("./socket.io");
+
+// passport-kakao
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -127,11 +144,13 @@ app.use("/", [
   commentRouter,
 ]);
 
+socketHandlers(io);
+
 app.get("/", async (req, res) => {
   return res.sendFile(__dirname + "/index.html");
 });
 
 const PORT = 3000;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(PORT, "포트 번호로 서버가 실행되었습니다.");
 });
