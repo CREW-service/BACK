@@ -15,19 +15,31 @@ const development = {
   },
 };
 const production = {
-  username: env.MYSQL_USERNAME,
-  password: env.MYSQL_PASSWORD,
-  database: env.MYSQL_DATABASE,
-  host: env.MYSQL_HOST,
+  username: env.DB_USERNAME,
+  password: env.DB_PASSWORD,
+  database: env.DB_DATABASE,
+  host: env.DB_HOST,
   dialect: "mysql",
-  //port: env.MYSQL_PORT
+  timezone: "Asia/Seoul",
+  dialectOptions: {
+    options: {
+      requestTimeout: 3000,
+    },
+    timezone: "local",
+  },
 };
 const test = {
-  username: env.MYSQL_USERNAME,
-  password: env.MYSQL_PASSWORD,
-  database: env.MYSQL_DATABASE_TEST,
-  host: env.MYSQL_HOST,
+  username: env.DB_USERNAME,
+  password: env.DB_PASSWORD,
+  database: env.DB_DATABASE,
+  host: env.DB_HOST,
   dialect: "mysql",
-  //port: env.MYSQL_PORT
+  timezone: "Asia/Seoul",
+  dialectOptions: {
+    options: {
+      requestTimeout: 3000,
+    },
+    timezone: "local",
+  },
 };
 module.exports = { development, production, test };
