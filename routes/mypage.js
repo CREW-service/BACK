@@ -15,7 +15,7 @@ router.get("/mypage", authJwt, async (req, res) => {
     });
 
     // userId에 맞춰 작성한 글 가져오기
-    const writedBoatsPromise = await Boats.findAll({
+    const writedBoatsPromise = Boats.findAll({
       attributes: ["boatId", "captain", "title", "createdAt", "isDone"],
       where: { userId, deletedAt: null },
       order: [["createdAt", "DESC"]],
@@ -23,7 +23,7 @@ router.get("/mypage", authJwt, async (req, res) => {
     });
 
     // crews 테이블에서 참여한 boatId 찾기
-    const attendedBoatsDataPromise = await Crews.findAll({
+    const attendedBoatsDataPromise = Crews.findAll({
       attributes: ["boatId"],
       where: { userId, isReleased: false },
       raw: true,
