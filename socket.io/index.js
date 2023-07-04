@@ -1,5 +1,5 @@
-const alarm = require("./alarms");
+const alarms = require("./alarms");
 
 module.exports = (io) => {
-  alarm(io);
+  alarms(io);
 };
