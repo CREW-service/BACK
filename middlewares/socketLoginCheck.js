@@ -3,11 +3,14 @@ const { Users } = require("../models");
 
 module.exports = async (socket, next) => {
   try {
-    const authorizationCookies = socket.cookies.authorization;
-    const authorizationHeaders = socket.headers.authorization;
+    const authorizationCookies = socket.handshake.headers.authorization;
+    const authorizationHeaders = socket.handshake.headers.authorization;
     const authorization = authorizationCookies
       ? authorizationCookies
       : authorizationHeaders;
+
+    socket.locals = {}; // 새로운 객체 생성
+    socket.locals.user = {}; // user 객체 정의
 
     if (!authorization) {
       return next();
