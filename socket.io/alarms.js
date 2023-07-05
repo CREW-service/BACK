@@ -32,7 +32,7 @@ module.exports = (io) => {
           if (!alarms || alarms.length === 0) {
             socket.emit("error", "조회된 알림이 없습니다.");
           }
-          socket.emit("alarms", { data: alarms });
+          socket.emit("alarmList", { data: alarms });
         }
       } catch (e) {
         console.log(e);
