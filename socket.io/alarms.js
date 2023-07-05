@@ -8,7 +8,7 @@ module.exports = (io) => {
       console.log(`Socket 연결: ${event}`);
     });
 
-    socket.on("alarms", async (data) => {
+    socket.on("alarms", async () => {
       try {
         // 토큰 검사
         await socketLoginCheck(socket, (err) => {
@@ -34,6 +34,28 @@ module.exports = (io) => {
           }
           socket.emit("alarmList", { data: alarms });
         }
+        socket.on("alarmRead", async (alarmId) => {
+          const alarm = await Alarms.findOne({ where: { alarmId, userId } });
+          if (userId !== alarm.userId) {
+            socket.emit("error", "알림 읽음 처리. 권한이 없습니다.");
+          }
+          // alarmId에 해당하는 부분 isRead 처리
+          const updateCount = await Alarms.update(
+            { isRead: true },
+            { where: { alarmId, userId } }
+          );
+          if (!updateCount) {
+            socket.emit("error", "알림 읽기 처리 실패.");
+          }
+          if (updateCount) {
+            const alarms = await Alarms.findAll({
+              attributes: ["alarmId", "isRead", "message"],
+              where: { userId, isRead: false },
+              raw: true,
+            });
+            socket.emit("alarmList", { data: alarms });
+          }
+        });
       } catch (e) {
         console.log(e);
       }
