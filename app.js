@@ -95,19 +95,19 @@ app.use(
   })
 );
 
-// const io = require("socket.io")(server, {
-//   cors: {
-//     origin: [
-//       "*.ysizuku.com",
-//       "http://localhost:3000",
-//       "http://react.ysizuku.com",
-//       "https://react.ysizuku.com",
-//     ],
-//     credentials: true,
-//   },
-// });
+const io = require("socket.io")(server, {
+  cors: {
+    origin: [
+      "*.ysizuku.com",
+      "http://localhost:3000",
+      "http://react.ysizuku.com",
+      "https://react.ysizuku.com",
+    ],
+    credentials: true,
+  },
+});
 
-// const socketHandlers = require("./socket.io");
+const socketHandlers = require("./socket.io");
 
 // passport-kakao
 app.use(passport.initialize());
@@ -143,13 +143,13 @@ app.use("/", [
   commentRouter,
 ]);
 
-// socketHandlers(io);
+socketHandlers(io);
 
 app.get("/", async (req, res) => {
   return res.sendFile(__dirname + "/index.html");
 });
 
-const PORT = 3001;
+const PORT = 3000;
 server.listen(PORT, () => {
   console.log(PORT, "포트 번호로 서버가 실행되었습니다.");
 });
