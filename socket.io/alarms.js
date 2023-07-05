@@ -19,7 +19,7 @@ module.exports = (io) => {
         const userId = socket.locals.user ? socket.locals.user.userId : null;
 
         if (userId === null) {
-          socket.emit("guest", data);
+          socket.emit("error", "게스트입니다.");
         }
         if (userId) {
           const alarms = await Alarms.findAll({
@@ -32,7 +32,7 @@ module.exports = (io) => {
           if (!alarms || alarms.length === 0) {
             socket.emit("error", "조회된 알림이 없습니다.");
           }
-          socket.emit("user", { data: alarms });
+          socket.emit("alarms", { data: alarms });
         }
       } catch (e) {
         console.log(e);
