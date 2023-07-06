@@ -1,6 +1,7 @@
 const express = require("express");
 const authJwt = require("../middlewares/authMiddleware"); // Crew 회원 확인을 위한 middleware
 const loginMiddleware = require("../middlewares/loginMiddleware"); // 로그인한 회원 확인을 위한 middleware
+const { Op } = require("sequelize");
 const {
   sequelize,
   Users,
@@ -105,10 +106,17 @@ router.post("/boat/write", authJwt, async (req, res) => {
 
 /* 2. MAP API를 활용해 글 목록 조회 API
      @ boatId, title, keyword, endDate, maxCrewNum, crewCount, address 조회
-     @ 위치를 통해 MAP 위에 보트 모양과 keyword만 보이게 한다.
+     @ 위치를 통해 MAP 위에 보트 모양과 keyword만 보이게 한다. 350 X656
      @ 클릭할 경우 모집 글이 보이게 한다. */
 router.get("/boat/map", async (req, res) => {
   try {
+    // 범위 설정에 필요한 latitude와 longitude 받기
+    const data = req.query;
+    const swLatitude = data.swLatLng[0];
+    const swLongitude = data.swLatLng[1];
+    const neLatitude = data.neLatLng[0];
+    const neLongitude = data.neLatLng[1];
+
     // Crew 모집 글 목록 조회
     const boats = await Boats.findAll({
       attributes: [
@@ -127,7 +135,12 @@ router.get("/boat/map", async (req, res) => {
         "latitude",
         "longitude",
       ],
-      where: { isDone: false, deletedAt: null },
+      where: {
+        isDone: false,
+        deletedAt: null,
+        latitude: { [Op.between]: [swLatitude, neLatitude] },
+        longitude: { [Op.between]: [swLongitude, neLongitude] },
+      },
       group: ["Boats.boatId"],
       raw: true,
     });
