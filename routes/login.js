@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 const authJwt = require("../middlewares/authMiddleware");
 
 //로그인
-router.post("/login", async (req, res) => {
+router.get("/login", async (req, res) => {
   try {
     // const userId = 3;
 
@@ -18,6 +18,8 @@ router.post("/login", async (req, res) => {
 
     // const query = "?token=" + token;
     // res.locals.token = token;
+
+    // res.cookie("authorization", `Bearer ${token}`);
 
     // res.redirect(`http://localhost:3000/${query}`);
     const { email } = req.body;

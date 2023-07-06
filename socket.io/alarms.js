@@ -34,6 +34,13 @@ module.exports = (io) => {
           }
           socket.emit("alarmList", { data: alarms });
         }
+
+        // 알림이 추가될 때마다 실시간으로 프론트엔드로 전달
+        // Alarms.addHook("afterCreate", async (alarm) => {
+        //   if (alarm.userId === userId && !alarm.isRead) {
+        //     socket.emit("newAlarm", { data: alarm });
+        //   }
+        // });
         socket.on("alarmRead", async (alarmId) => {
           const alarm = await Alarms.findOne({ where: { alarmId, userId } });
           if (userId !== alarm.userId) {
