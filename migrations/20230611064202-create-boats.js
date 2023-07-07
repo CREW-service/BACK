@@ -52,11 +52,11 @@ module.exports = {
       },
       latitude: {
         allowNull: false,
-        type: Sequelize.FLOAT(14),
+        type: Sequelize.DOUBLE,
       },
       longitude: {
         allowNull: false,
-        type: Sequelize.FLOAT(14),
+        type: Sequelize.DOUBLE,
       },
       address: {
         allowNull: false,
