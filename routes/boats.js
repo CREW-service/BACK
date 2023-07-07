@@ -92,8 +92,8 @@ router.post("/boat/write", authJwt, async (req, res) => {
       address,
       maxCrewNum,
       isDone,
-      latitude: parseFloat(latitude),
-      longitude: parseFloat(longitude),
+      latitude: latitude.toPrecision(15),
+      longitude: longitude.toPrecision(15),
     });
     return res.status(200).json({ message: "Crew 모집 글 작성에 성공" });
   } catch (e) {
