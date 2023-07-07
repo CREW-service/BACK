@@ -69,12 +69,12 @@ router.post("/boat/write", authJwt, async (req, res) => {
         .status(412)
         .json({ errorMessage: "address가 작성된 내용이 없습니다." });
     }
-    if (latitude < 1) {
+    if (latitude === null) {
       return res
         .status(412)
         .json({ errorMessage: "latitude가 작성된 내용이 없습니다." });
     }
-    if (longitude < 1) {
+    if (longitude === null) {
       return res
         .status(412)
         .json({ errorMessage: "longitude가 작성된 내용이 없습니다." });
@@ -92,8 +92,8 @@ router.post("/boat/write", authJwt, async (req, res) => {
       address,
       maxCrewNum,
       isDone,
-      latitude,
-      longitude,
+      latitude: parseFloat(latitude),
+      longitude: parseFloat(latitude),
     });
     return res.status(200).json({ message: "Crew 모집 글 작성에 성공" });
   } catch (e) {
@@ -111,11 +111,11 @@ router.post("/boat/write", authJwt, async (req, res) => {
 router.get("/boat/map", async (req, res) => {
   try {
     // 범위 설정에 필요한 latitude와 longitude 받기
-    const data = req.query;
-    const swLatitude = data.swLatLng[0];
-    const swLongitude = data.swLatLng[1];
-    const neLatitude = data.neLatLng[0];
-    const neLongitude = data.neLatLng[1];
+    let data = req.query;
+    let swLatitude = data.Bounds.swLatLng[0];
+    let swLongitude = data.Bounds.swLatLng[1];
+    let neLatitude = data.Bounds.neLatLng[0];
+    let neLongitude = data.Bounds.neLatLng[1];
 
     // Crew 모집 글 목록 조회
     const boats = await Boats.findAll({

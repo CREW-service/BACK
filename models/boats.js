@@ -62,7 +62,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       content: {
         allowNull: false,
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT("medium"),
       },
       keyword: {
         allowNull: false,
@@ -77,11 +77,11 @@ module.exports = (sequelize, DataTypes) => {
       },
       latitude: {
         allowNull: false,
-        type: DataTypes.STRING,
+        type: DataTypes.FLOAT(14),
       },
       longitude: {
         allowNull: false,
-        type: DataTypes.STRING,
+        type: DataTypes.FLOAT(14),
       },
       address: {
         allowNull: false,

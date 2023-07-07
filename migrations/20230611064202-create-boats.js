@@ -37,7 +37,7 @@ module.exports = {
       },
       content: {
         allowNull: false,
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT("medium"),
       },
       keyword: {
         allowNull: false,
@@ -52,11 +52,11 @@ module.exports = {
       },
       latitude: {
         allowNull: false,
-        type: Sequelize.STRING,
+        type: Sequelize.FLOAT(14),
       },
       longitude: {
         allowNull: false,
-        type: Sequelize.STRING,
+        type: Sequelize.FLOAT(14),
       },
       address: {
         allowNull: false,
