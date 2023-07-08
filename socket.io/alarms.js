@@ -13,7 +13,7 @@ module.exports = (io) => {
         // 토큰 검사
         await socketLoginCheck(socket, (err) => {
           if (err) {
-            return done(err.message);
+            socket.emit("error", err.message);
           }
         });
         const userId = socket.locals.user ? socket.locals.user.userId : null;
@@ -29,21 +29,22 @@ module.exports = (io) => {
           });
 
           // alarms 없을 경우
-          if (!alarms || alarms.length === 0) {
+          if (!alarms) {
             socket.emit("error", "조회된 알림이 없습니다.");
           }
           socket.emit("alarmList", { data: alarms });
         }
 
         // 알림이 추가될 때마다 실시간으로 프론트엔드로 전달
-        // Alarms.addHook("afterCreate", async (alarm) => {
-        //   if (alarm.userId === userId && !alarm.isRead) {
-        //     socket.emit("newAlarm", { data: alarm });
-        //   }
-        // });
+        Alarms.addHook("afterCreate", async (alarm) => {
+          if (alarm.userId === userId && !alarm.isRead) {
+            socket.emit("newAlarm", { data: alarm });
+          }
+        });
+
         socket.on("alarmRead", async (alarmId) => {
           const alarm = await Alarms.findOne({ where: { alarmId, userId } });
-          if (userId !== alarm.userId) {
+          if (!alarm || userId !== alarm.userId) {
             socket.emit("error", "알림 읽음 처리. 권한이 없습니다.");
           }
           // alarmId에 해당하는 부분 isRead 처리

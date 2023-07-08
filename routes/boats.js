@@ -146,10 +146,8 @@ router.get("/boat/map", async (req, res) => {
     });
 
     // 작성된 모집 글이 없을 경우
-    if (boats.length === 0) {
-      return res
-        .status(404)
-        .json({ errorMessage: "작성된 모집 글이 없습니다." });
+    if (!boats) {
+      return res.status(202).json({ boats: [] });
     }
 
     return res.status(200).json({ boats });
