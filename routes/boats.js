@@ -498,7 +498,7 @@ router.patch("/boat/:boatId/delete", authJwt, async (req, res) => {
     // crewMember 조회
     const crewMember = await Crews.findAll({
       attributes: ["userId"],
-      where: { boatId },
+      where: { boatId, isReleased: false },
       raw: true,
     });
 
