@@ -324,12 +324,12 @@ router.put("/boat/:boatId", authJwt, async (req, res) => {
         .status(412)
         .json({ errorMessage: "유효하지 않은 maxCrewNum입니다." });
     }
-    if (latitude < 1) {
+    if (latitude === null) {
       return res
         .status(412)
         .json({ errorMessage: "유효하지 않은 latitude입니다." });
     }
-    if (longitude < 1) {
+    if (longitude === null) {
       return res
         .status(412)
         .json({ errorMessage: "유효하지 않은 longitude입니다." });
