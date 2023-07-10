@@ -25,7 +25,7 @@ router.get("/alarm", loginMiddleware, async (req, res) => {
     // user 정보에 맞춰 알람 호출 해주기
     if (userId) {
       const alarms = await Alarms.findAll({
-        attributes: ["alarmId", "isRead", "message"],
+        attributes: ["alarmId", "isRead", "message", "createdAt"],
         where: { userId, isRead: false },
         raw: true,
       });
@@ -98,6 +98,7 @@ router.post("/boat/:boatId/join", authJwt, async (req, res) => {
       attributes: [
         "userId",
         "boatId",
+        "title",
         "maxCrewNum",
         [
           sequelize.literal(
@@ -150,7 +151,7 @@ router.post("/boat/:boatId/join", authJwt, async (req, res) => {
       await Alarms.create({
         userId: boat.userId,
         isRead: false,
-        message: `${user.nickName}님이 모임에 참가했습니다.`,
+        message: `${user.nickName}님이 ${boat.title}모임에 참가했습니다.`,
       });
       return res.status(200).json({ message: "참가 성공." });
     } else {
@@ -273,7 +274,7 @@ router.post("/boat/:boatId/exit", authJwt, async (req, res) => {
     await Alarms.create({
       userId: boat.userId,
       isRead: false,
-      message: `${user.nickName}님이 모임에 나갔습니다.`,
+      message: `${user.nickName}님이 ${boat.title} 모임에서 나갔습니다.`,
     });
     return res.status(200).json({ message: "나가기 성공." });
   } catch (e) {
