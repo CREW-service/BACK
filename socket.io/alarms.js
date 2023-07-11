@@ -18,29 +18,24 @@ module.exports = (io) => {
         });
         const userId = socket.locals.user ? socket.locals.user.userId : null;
 
-        if (userId === null) {
-          socket.emit("error", "게스트입니다.");
-        }
-        if (userId) {
-          const alarms = await Alarms.findAll({
-            attributes: ["alarmId", "isRead", "message"],
-            where: { userId, isRead: false },
-            raw: true,
-          });
-
-          // alarms 없을 경우
-          if (!alarms) {
-            socket.emit("error", "조회된 알림이 없습니다.");
+        setInterval(async () => {
+          if (userId === null) {
+            socket.emit("error", "게스트입니다.");
           }
-          socket.emit("alarmList", { data: alarms });
-        }
+          if (userId) {
+            const alarms = await Alarms.findAll({
+              attributes: ["alarmId", "isRead", "message", "createdAt"],
+              where: { userId, isRead: false },
+              raw: true,
+            });
 
-        // 알림이 추가될 때마다 실시간으로 프론트엔드로 전달
-        Alarms.addHook("afterCreate", async (alarm) => {
-          if (alarm.userId === userId && !alarm.isRead) {
-            socket.emit("newAlarm", { data: alarm });
+            // alarms 없을 경우
+            if (!alarms) {
+              socket.emit("error", "조회된 알림이 없습니다.");
+            }
+            socket.emit("alarmList", { data: alarms });
           }
-        });
+        }, 5000);
 
         socket.on("alarmRead", async (alarmId) => {
           const alarm = await Alarms.findOne({ where: { alarmId, userId } });
