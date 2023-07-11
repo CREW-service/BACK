@@ -57,6 +57,15 @@ module.exports = (io) => {
             socket.emit("alarmList", { data: alarms });
           }
         });
+
+        // const newAlarm = async (userId) => {
+        //   const alarms = await Alarms.findAll({
+        //     attributes: ["alarmId", "isRead", "message", "createdAt"],
+        //     where: { userId, isRead: false },
+        //     raw: true,
+        //   });
+        //   socket.emit("newAlarm", { data: alarms });
+        // };
       } catch (e) {
         console.log(e);
       }
