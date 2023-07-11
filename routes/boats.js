@@ -141,9 +141,9 @@ router.get("/boat/map", async (req, res) => {
         latitude: { [Op.between]: [swLatitude, neLatitude] },
         longitude: { [Op.between]: [swLongitude, neLongitude] },
       },
-      group: ["Boats.boatId"],
       raw: true,
     });
+    console.log(boats.length);
 
     // 작성된 모집 글이 없을 경우
     if (!boats) {

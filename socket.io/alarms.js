@@ -18,24 +18,22 @@ module.exports = (io) => {
         });
         const userId = socket.locals.user ? socket.locals.user.userId : null;
 
-        setInterval(async () => {
-          if (userId === null) {
-            socket.emit("error", "게스트입니다.");
-          }
-          if (userId) {
-            const alarms = await Alarms.findAll({
-              attributes: ["alarmId", "isRead", "message", "createdAt"],
-              where: { userId, isRead: false },
-              raw: true,
-            });
+        if (userId === null) {
+          socket.emit("error", "게스트입니다.");
+        }
+        if (userId) {
+          const alarms = await Alarms.findAll({
+            attributes: ["alarmId", "isRead", "message", "createdAt"],
+            where: { userId, isRead: false },
+            raw: true,
+          });
 
-            // alarms 없을 경우
-            if (!alarms) {
-              socket.emit("error", "조회된 알림이 없습니다.");
-            }
-            socket.emit("alarmList", { data: alarms });
+          // alarms 없을 경우
+          if (!alarms) {
+            socket.emit("error", "조회된 알림이 없습니다.");
           }
-        }, 5000);
+          socket.emit("alarmList", { data: alarms });
+        }
 
         socket.on("alarmRead", async (alarmId) => {
           const alarm = await Alarms.findOne({ where: { alarmId, userId } });
