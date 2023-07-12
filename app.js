@@ -143,6 +143,7 @@ app.use("/", [
   commentRouter,
 ]);
 
+app.set("io", io);
 socketHandlers(io);
 
 app.get("/", async (req, res) => {
