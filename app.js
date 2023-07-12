@@ -143,14 +143,14 @@ app.use("/", [
   commentRouter,
 ]);
 
-app.set("io", io);
+// app.set("io", io);
 socketHandlers(io);
 
 app.get("/", async (req, res) => {
   return res.sendFile(__dirname + "/index.html");
 });
 
-const PORT = 3000;
+const PORT = 3001;
 server.listen(PORT, () => {
   console.log(PORT, "포트 번호로 서버가 실행되었습니다.");
 });

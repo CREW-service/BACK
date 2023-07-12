@@ -83,8 +83,8 @@ router.put("/alarm/:alarmId", authJwt, async (req, res) => {
    @ 글의 maxCrewNum와 crewNum을 확인해서 참가 가능 여부 설정 */
 router.post("/boat/:boatId/join", authJwt, async (req, res) => {
   try {
-    // io 정보
-    const io = req.app.get("io");
+    // // io 정보
+    // const io = req.app.get("io");
     // user 정보
     const { userId } = res.locals.user;
     const user = await Users.findOne({
@@ -155,13 +155,7 @@ router.post("/boat/:boatId/join", authJwt, async (req, res) => {
         isRead: false,
         message: `${user.nickName}님이 ${boat.title}모임에 참가했습니다.`,
       });
-      const alarms = await Alarms.findAll({
-        attributes: ["alarmId", "isRead", "message", "createdAt"],
-        where: { userId: boat.userId, isRead: false },
-        raw: true,
-      });
-
-      io.emit("newAlarm");
+      // io.emit("newAlarm");
       return res.status(200).json({ message: "참가 성공." });
     } else {
       return res.status(203).json({ message: "모집이 마감되었습니다." });
@@ -179,6 +173,8 @@ router.post("/boat/:boatId/join", authJwt, async (req, res) => {
    @ 내보내면 Crews에서 isReleased를 true로 전환, Alarms를 이용해 알림 생성 */
 router.post("/boat/:boatId/release", authJwt, async (req, res) => {
   try {
+    // // io 정보
+    // const io = req.app.get("io");
     // user 정보
     const { userId } = res.locals.user;
     // params로 boatId
@@ -224,12 +220,7 @@ router.post("/boat/:boatId/release", authJwt, async (req, res) => {
           isRead: false,
           message: `"${boat.title}" 모임에서 내보내졌습니다.`,
         });
-        const alarms = await Alarms.findAll({
-          attributes: ["alarmId", "isRead", "message", "createdAt"],
-          where: { userId: crew.userId, isRead: false },
-          raw: true,
-        });
-        io.emit("newAlarm");
+        // io.emit("newAlarm");
         return res.status(200).json({ message: "내보내기 성공." });
       }
     } else {
@@ -250,8 +241,8 @@ router.post("/boat/:boatId/release", authJwt, async (req, res) => {
     @ Crews에서 삭제, 나가기 알람 생성(Captain한테 보내기), comment는 deletedAt 업데이트 시키기*/
 router.post("/boat/:boatId/exit", authJwt, async (req, res) => {
   try {
-    // io 정보
-    const io = req.app.get("io");
+    // // io 정보
+    // const io = req.app.get("io");
     //user 정보
     const { userId } = res.locals.user;
     const user = await Users.findOne({
@@ -293,7 +284,7 @@ router.post("/boat/:boatId/exit", authJwt, async (req, res) => {
       isRead: false,
       message: `${user.nickName}님이 ${boat.title} 모임에서 나갔습니다.`,
     });
-    io.emit("newAlarm");
+    // io.emit("newAlarm");
     return res.status(200).json({ message: "나가기 성공." });
   } catch (e) {
     console.log(e);
