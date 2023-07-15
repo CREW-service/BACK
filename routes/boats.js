@@ -344,7 +344,7 @@ router.put("/boat/:boatId", authJwt, async (req, res) => {
     if (keyword) {
       boat.keyword = keyword;
     }
-    if (endDate) {
+    if (boat.endDate !== endDate) {
       boat.endDate = endDate;
     }
     if (address) {
