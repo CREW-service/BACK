@@ -335,28 +335,28 @@ router.put("/boat/:boatId", authJwt, async (req, res) => {
     }
 
     // 수정할 내용에 따라 수정
-    if (title) {
+    if (boat.title !== endDate) {
       boat.title = title;
     }
-    if (content) {
+    if (boat.content !== endDate) {
       boat.content = content;
     }
-    if (keyword) {
+    if (boat.keyword !== endDate) {
       boat.keyword = keyword;
     }
     if (boat.endDate !== endDate) {
       boat.endDate = endDate;
     }
-    if (address) {
+    if (boat.address !== endDate) {
       boat.address = address;
     }
-    if (maxCrewNum) {
+    if (boat.maxCrewNum !== endDate) {
       boat.maxCrewNum = maxCrewNum;
     }
-    if (latitude) {
+    if (boat.latitude !== endDate) {
       boat.latitude = latitude;
     }
-    if (longitude) {
+    if (boat.longitude !== endDate) {
       boat.longitude = longitude;
     }
 
