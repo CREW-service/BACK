@@ -68,8 +68,8 @@ app.use(
     origin: [
       "*.ysizuku.com",
       "http://localhost:3000",
-      "http://react.ysizuku.com",
-      "https://react.ysizuku.com",
+      "http://crew.ysizuku.com",
+      "https://crew.ysizuku.com",
     ],
     credentials: true,
     withCredentials: true,
@@ -100,8 +100,8 @@ const io = require("socket.io")(server, {
     origin: [
       "*.ysizuku.com",
       "http://localhost:3000",
-      "http://react.ysizuku.com",
-      "https://react.ysizuku.com",
+      "http://crew.ysizuku.com",
+      "https://crew.ysizuku.com",
     ],
     credentials: true,
   },
