@@ -30,7 +30,7 @@ module.exports = (io) => {
 
           // alarms 없을 경우
           if (!alarms) {
-            socket.emit("error", "조회된 알림이 없습니다.");
+            socket.emit("alarmList", { data: [] });
           }
           socket.emit("alarmList", { data: alarms });
         }
@@ -54,6 +54,9 @@ module.exports = (io) => {
               where: { userId, isRead: false },
               raw: true,
             });
+            if (!alarms) {
+              socket.emit("alarmList", { data: [] });
+            }
             socket.emit("alarmList", { data: alarms });
           }
         });
