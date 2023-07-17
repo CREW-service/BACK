@@ -272,12 +272,6 @@ router.post("/boat/:boatId/exit", authJwt, async (req, res) => {
       });
     }
 
-    // 작성했던 comment deletedAt으로 처리하기
-    await Comments.update(
-      { deletedAt: new Date() },
-      { where: { boatId, userId } }
-    );
-
     // 알람생성
     await Alarms.create({
       userId: boat.userId,
