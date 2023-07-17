@@ -338,25 +338,25 @@ router.put("/boat/:boatId", authJwt, async (req, res) => {
     if (boat.title !== endDate) {
       boat.title = title;
     }
-    if (boat.content !== endDate) {
+    if (boat.content !== content) {
       boat.content = content;
     }
-    if (boat.keyword !== endDate) {
+    if (boat.keyword !== keyword) {
       boat.keyword = keyword;
     }
     if (boat.endDate !== endDate) {
       boat.endDate = endDate;
     }
-    if (boat.address !== endDate) {
+    if (boat.address !== address) {
       boat.address = address;
     }
-    if (boat.maxCrewNum !== endDate) {
+    if (boat.maxCrewNum !== maxCrewNum) {
       boat.maxCrewNum = maxCrewNum;
     }
-    if (boat.latitude !== endDate) {
+    if (boat.latitude !== latitude) {
       boat.latitude = latitude;
     }
-    if (boat.longitude !== endDate) {
+    if (boat.longitude !== longitude) {
       boat.longitude = longitude;
     }
 
