@@ -335,7 +335,7 @@ router.put("/boat/:boatId", authJwt, async (req, res) => {
     }
 
     // 수정할 내용에 따라 수정
-    if (boat.title !== endDate) {
+    if (boat.title !== title) {
       boat.title = title;
     }
     if (boat.content !== content) {
