@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class Comments extends Model {
+  class Reports extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -9,63 +9,38 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsTo(models.Users, {
-        targetKey: "userId",
-        foreignKey: "userId",
-        onDelete: "CASCADE",
-      });
 
       this.belongsTo(models.Boats, {
         targetKey: "boatId",
         foreignKey: "boatId",
-        onDelete: "CASCADE",
       });
 
-      this.hasMany(models.Reports, {
+      this.belongsTo(models.Comments, {
         targetKey: "commentId",
         foreignKey: "commentId",
       });
     }
   }
-  Comments.init(
+  Reports.init(
     {
-      commentId: {
+      reportId: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: DataTypes.INTEGER,
       },
-      userId: {
-        allowNull: false,
-        type: DataTypes.INTEGER,
-        references: {
-          model: "Users",
-          key: "userId",
-        },
-        onDelete: "CASCADE",
-      },
       boatId: {
         allowNull: false,
         type: DataTypes.INTEGER,
-        references: {
-          model: "Boats",
-          key: "boatId",
-        },
-        onDelete: "CASCADE",
       },
-      comment: {
+      commentId: {
+        type: DataTypes.INTEGER,
+      },
+      reportContent: {
         allowNull: false,
-        type: DataTypes.STRING,
-      },
-      deletedAt: {
-        type: DataTypes.DATE,
+        type: DataTypes.TEXT("medium"),
       },
       createdAt: {
-        allowNull: false,
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
-      },
-      updatedAt: {
         allowNull: false,
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,
@@ -73,8 +48,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "Comments",
+      modelName: "Reports",
+      timestamps: true,
+      updatedAt: false,
     }
   );
-  return Comments;
+  return Reports;
 };
