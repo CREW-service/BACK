@@ -20,7 +20,7 @@ router.get(
     const oneHour = 7200000; // 1시간 (밀리초 단위)
     res.setHeader(
       "Set-cookie",
-      `authorization=Bearer ${token} maxAge: oneHour;
+      `authorization=Bearer ${token}; maxAge: oneHour;
     httpOnly: true;
     secure: true;
     domain: "crew.ysizuku.com";`
