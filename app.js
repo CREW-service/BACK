@@ -6,6 +6,7 @@ const passport = require("passport");
 const helmet = require("helmet");
 const path = require("path");
 const http = require("http");
+const jwt = require("jsonwebtoken");
 const server = http.createServer(app);
 require("dotenv").config();
 
