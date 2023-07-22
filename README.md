@@ -66,7 +66,7 @@
 
 ---
 
-[API Document][API-LINK]
+## [API Document][API-LINK]
 
 [API-LINK]: https://www.notion.so/ea092cff3cfb41578f27776d6817023b?v=e2453e26532f4189847fc33c6145b049&pvs=4 "Go API"
 
