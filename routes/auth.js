@@ -27,7 +27,6 @@ router.get(
     res
       .set({ authorization: `Bearer ${token}` })
       .redirect(`https://crew.ysizuku.com/mypage`);
-    return res.cookie;
   }
 );
 
