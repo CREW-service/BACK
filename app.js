@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 const kakao = require("./passport/kakaoStrategy");
 const passport = require("passport");
+const helmet = require("helmet");
 const path = require("path");
 const http = require("http");
 const server = http.createServer(app);
@@ -80,6 +81,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+app.use(helmet());
 
 app.use(
   session({
