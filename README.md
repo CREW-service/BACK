@@ -78,7 +78,7 @@
 
 ---
 
-## :squirrel: [Git hub][Git hub]
+## :cat: [Git hub][Git hub]
 
 [Git hub]: https://github.com/CREW-service "GO Crew-service"
 
