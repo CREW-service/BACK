@@ -13,7 +13,7 @@ require("dotenv").config();
 // node-cron
 const cron = require("node-cron");
 const { Op } = require("sequelize");
-const { Boats } = require("./models");
+const { Boats, Users } = require("./models");
 
 // 보트 업데이트 함수
 const updateBoats = async () => {
