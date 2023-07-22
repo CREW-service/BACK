@@ -24,8 +24,7 @@ module.exports = () => {
               {
                 userId: exUser.userId,
               },
-              process.env.JWT_SECRET,
-              { expiresIn: "1h" }
+              process.env.JWT_SECRET
             );
             return done(null, token);
           } else {
@@ -39,8 +38,7 @@ module.exports = () => {
               {
                 userId: newUser.userId,
               },
-              process.env.JWT_SECRET,
-              { expiresIn: "1h" }
+              process.env.JWT_SECRET
             );
             return done(null, token);
           }

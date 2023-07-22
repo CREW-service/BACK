@@ -17,7 +17,7 @@ router.get(
   // kakaoStrategy에서 성공한다면 콜백 실행
   (req, res) => {
     const token = req.user; // 사용자 토큰 정보 (예: JWT 토큰)
-    res.cookie("authorization", `Bearer ${token}`, { expires: "1h" });
+    res.cookie("authorization", `Bearer ${token}`, { expiresIn: "1h" });
 
     res.redirect(`https://crew.ysizuku.com`);
   }
