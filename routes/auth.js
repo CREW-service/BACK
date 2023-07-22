@@ -24,7 +24,6 @@ router.get(
         maxAge: oneHour,
         httpOnly: true,
         secure: true,
-        sameSite: "none",
       });
   }
 );
