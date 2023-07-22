@@ -1,63 +1,39 @@
-# Crew
+![Alt text](https://file.notion.so/f/s/c8eb68c2-2877-4eeb-95cc-4c77c944c5e3/f24ff368b03ea0d9.jpg?id=6bb14bf5-9e6e-414e-b1a9-f77610826e2d&table=block&spaceId=aa8571ff-db5c-4c63-a227-0bac038f37bc&expirationTimestamp=1690084800000&signature=QULugRJiw0-W-4bIqBCQ7Ru_R6SKQ4ZF5-ZIK-7SJK0&downloadName=f24ff368b03ea0d9.jpg)
 
-Crew의 백엔드 레포입니다.
+# CREW [CREW](https://crew.ysizuku.com/)
 
-## 목차
+## 프로젝트 소개
 
-- [소개](#소개)
-- [설치](#설치)
-- [API 엔드포인트](#api - 엔드포인트)
+### 내 주변에서 함께하고 싶은 모임을 만들거나 참여할 수 있는 플랫폼 서비스
 
-## 소개
+- 내 주변에서 모임을 만들고 크루를 모집하세요!
+- 이미 만들어진 모임에도 참여!
 
-Crew의 백엔드 코드입니다. 이 프로젝트는 함께하고 싶은 모임을 만들거나 참여할 수 있는 플랫폼 서비스입니다.
+#### 프로젝트 기간
 
-### 기술 스택
+2023년 6월 10일 ~ 2023년 7월 28일
 
-- 런타임: <code>Node.js</code>
-- 프레임워크: <code>express</code>
-- ORM: <code>Sequelize</code>
-- 데이터베이스: <code>MySQL</code>
-- 버전 관리 시스템: <code>Git</code>
-- 외부 API: <code>kakao map</code>
+---
 
-## 설치
+## 개발 인원
 
-1. 레포 클론:
+- 윤진영B (React) [팀장]
+- 윤진영A (React)
+- 박윤수 (Node.js) [부팀장]
+- 이도림 (Designer)
 
-```bash
-git clone https://github.com/CREW-service/BACK.git
-```
+---
 
-2. 의존성 설치:
+## 기술 스택
 
-```bash
-npm install
-```
+<code>Node.js</code> / <code>express</code> / <code>Sequelize</code> / <code>MySQL</code> / <code>Git</code> / <code>kakao map</code>
 
-3. 환경변수 설정
+---
 
-4. 서버를 실행:
+## 라이브러리
 
-```bash
-npm start
-```
-
-## API 엔드포인트
-
-백엔드 서버에서 제공하는 API 엔드 포인트는 다음과 같습니다.
-
-### User
-
-- <code>GET</code> /user/signin → 사용자 로그인
-- <code>GET</code> /user/logout → 사용자 로그아웃
-- <code>GET</code> /user/mypage → 사용자 마이페이지
-
-### Boat
-
-- <code>POST</code> /boat/write → crew 모집 글 작성
-- <code>GET</code> /boat/map → 맵을 통해 모집 글 목록 조회
-- <code>GET</code> /boat/detail → crew 모집 글 상세 조회
-- <code>PUT</code> /boat/:boatId → crew 모집 글 수정
-- <code>PATCH</code> /boat/:boatId → crew 모집 글 비공개 처리
-- <code>PATCH</code> /boat/:boatId → crew 모집 글 softDelete
+| 라이브러리    | 설명             |
+| :------------ | :--------------- |
+| cookie-parser | 쿠키 저장        |
+| cors          | 교차 리소스 공유 |
+| dotenv        | 환경변수 관리    |
