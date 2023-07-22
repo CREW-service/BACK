@@ -17,9 +17,13 @@ router.get(
   // kakaoStrategy에서 성공한다면 콜백 실행
   (req, res) => {
     const token = req.user; // 사용자 토큰 정보 (예: JWT 토큰)
-    let expires = new Date();
-    expires.setMinutes(expires.getMinutes() + 60); // expires의 시간을 현재 시간의 60분 후로 설정
-    res.cookie("authorization", `Bearer ${token}`, { expires: expires });
+    const oneHour = 7200000; // 1시간 (밀리초 단위)
+    res.cookie("authorization", `Bearer ${token}`, {
+      maxAge: oneHour,
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+    });
 
     res.redirect(`https://crew.ysizuku.com`);
   }
