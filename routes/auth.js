@@ -18,7 +18,7 @@ router.get(
   (req, res) => {
     const token = req.user; // 사용자 토큰 정보 (예: JWT 토큰)
     const oneHour = 7200000; // 1시간 (밀리초 단위)
-    res.cookie("authorization", `Bearer ${token}`, {
+    res.setHeader("Set-cookie", `authorization=Bearer ${token}`, {
       maxAge: oneHour,
       httpOnly: true,
       secure: true,
