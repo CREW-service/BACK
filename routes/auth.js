@@ -23,8 +23,9 @@ router.get(
         maxAge: oneHour,
         httpOnly: true,
         secure: true,
+        domain: "https://crew.ysizuku.com",
       })
-      .redirect(`https://spa-mall.shop`);
+      .redirect(`https://crew.ysizuku.com`);
   }
 );
 
