@@ -22,7 +22,7 @@ router.get(
       "Set-cookie",
       `authorization=Bearer ${token}; Max-Age=${oneHour}; HttpOnly; Secure; SameSite=none; Domain=crew.ysizuku.com;`
     );
-    res.redirect(302, "https://crew.ysizuku.com/main");
+    res.redirect(302, "https://crew.ysizuku.com");
   }
 );
 
