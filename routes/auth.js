@@ -22,7 +22,7 @@ router.get(
       maxAge: oneHour,
       httpOnly: true,
       secure: true,
-      domain: "https://crew.ysizuku.com",
+      domain: "crew.ysizuku.com",
     });
     res.redirect("https://crew.ysizuku.com/main");
   }
