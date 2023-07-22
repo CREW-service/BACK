@@ -18,12 +18,13 @@ router.get(
   (req, res) => {
     const token = req.user; // 사용자 토큰 정보 (예: JWT 토큰)
     const oneHour = 7200000; // 1시간 (밀리초 단위)
-    res.setHeader("Set-cookie", `authorization=Bearer ${token}`, {
-      maxAge: oneHour,
-      httpOnly: true,
-      secure: true,
-      domain: "crew.ysizuku.com",
-    });
+    res.setHeader(
+      "Set-cookie",
+      `authorization=Bearer ${token} maxAge: oneHour;
+    httpOnly: true;
+    secure: true;
+    domain: "crew.ysizuku.com";`
+    );
     res.redirect(302, "https://crew.ysizuku.com/main");
   }
 );
