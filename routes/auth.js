@@ -20,9 +20,9 @@ router.get(
     const oneHour = 7200000; // 1시간 (밀리초 단위)
     res.append(
       "Set-cookie",
-      `authorization=Bearer ${token}; Max-Age=${oneHour}; HttpOnly; Secure; SameSite=none; Domain=crew.ysizuku.com;`
+      `authorization=Bearer ${token}; Max-Age=${oneHour}; HttpOnly; Secure; SameSite=none; Domain=.ysizuku.com; path=/`
     );
-    res.redirect("https://crew.ysizuku.com");
+    res.redirect(302, "https://crew.ysizuku.com/main");
   }
 );
 
