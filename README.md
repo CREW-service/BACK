@@ -32,8 +32,38 @@
 
 ## 라이브러리
 
-| 라이브러리    | 설명             |
-| :------------ | :--------------- |
-| cookie-parser | 쿠키 저장        |
-| cors          | 교차 리소스 공유 |
-| dotenv        | 환경변수 관리    |
+| 라이브러리      | 설명                |
+| :-------------- | :------------------ |
+| cookie-parser   | 쿠키 저장           |
+| cors            | 교차 리소스 공유    |
+| dotenv          | 환경변수 관리       |
+| express         | 서버                |
+| express-session | 세션 관리           |
+| jsonwebtoken    | 서명 암호화         |
+| mysql2          | MySQL               |
+| sequelize       | MySQL ORM           |
+| sequelize-cli   | MySQL ORM Console   |
+| socket.io       | Socket 통신         |
+| node-cron       | 반복 작업 수행      |
+| passport        | 간편 로그인         |
+| multer          | 이미지 업로드       |
+| multer-s3       | 이미지 업로드       |
+| aws-sdk         | 아마존 s3와 연결    |
+| uuid            | 이미지 암호화       |
+| helmet          | http 헤더 설정 관리 |
+
+---
+
+## 프로젝트 아키텍처
+
+![Alt text](<https://file.notion.so/f/s/9028ebe0-25ae-4c7f-8d33-d1849c076544/Crew-%EB%B0%9C%ED%91%9C-%EC%9E%90%EB%A3%8C-004_(1).jpg?id=78dad97d-4bd0-46c9-87ba-9be6cfa57d63&table=block&spaceId=aa8571ff-db5c-4c63-a227-0bac038f37bc&expirationTimestamp=1690092000000&signature=1W6Uk-TgpIueQPkgl57ONh2vC4xl0O9VqpLcZt_C0eo&downloadName=Crew-%EB%B0%9C%ED%91%9C-%EC%9E%90%EB%A3%8C-004+%281%29.jpg>)
+
+---
+
+## ERD
+
+![Alt text](https://file.notion.so/f/s/a463de6e-593f-4a4a-b7bf-e33c4db048ec/drawSQL-crew-export-2023-07-22.png?id=443dd127-bff8-448c-82dd-4ab9129c06d7&table=block&spaceId=aa8571ff-db5c-4c63-a227-0bac038f37bc&expirationTimestamp=1690092000000&signature=Am9dFlhZ1fm0tlMeJ83xB2saNRblyE7GZjeL10GQPUg&downloadName=drawSQL-crew-export-2023-07-22.png)
+
+---
+
+##
