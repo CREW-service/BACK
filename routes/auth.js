@@ -25,7 +25,7 @@ router.get(
         secure: true,
         domain: "https://crew.ysizuku.com",
       })
-      .redirect(`https://crew.ysizuku.com`);
+      .redirect(`https://crew.ysizuku.com/mypage`);
   }
 );
 
