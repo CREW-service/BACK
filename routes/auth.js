@@ -24,9 +24,7 @@ router.get(
       secure: true,
       domain: "https://crew.ysizuku.com",
     });
-    res
-      .set({ authorization: `Bearer ${token}` })
-      .redirect(`https://crew.ysizuku.com/mypage`);
+    res.redirect("https://crew.ysizuku.com/main");
   }
 );
 
