@@ -24,7 +24,7 @@ router.get(
       secure: true,
       domain: "crew.ysizuku.com",
     });
-    res.redirect("https://crew.ysizuku.com/main");
+    res.redirect(302, "https://crew.ysizuku.com/main");
   }
 );
 
