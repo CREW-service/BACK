@@ -19,12 +19,12 @@ router.get(
     const token = req.user; // 사용자 토큰 정보 (예: JWT 토큰)
     const oneHour = 7200000; // 1시간 (밀리초 단위)
     res
-      .redirect(`https://spa-mall.shop`)
       .cookie("authorization", `Bearer ${token}`, {
         maxAge: oneHour,
         httpOnly: true,
         secure: true,
-      });
+      })
+      .redirect(`https://spa-mall.shop`);
   }
 );
 
