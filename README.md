@@ -1,21 +1,21 @@
 ![Alt text](https://file.notion.so/f/s/c8eb68c2-2877-4eeb-95cc-4c77c944c5e3/f24ff368b03ea0d9.jpg?id=6bb14bf5-9e6e-414e-b1a9-f77610826e2d&table=block&spaceId=aa8571ff-db5c-4c63-a227-0bac038f37bc&expirationTimestamp=1690084800000&signature=QULugRJiw0-W-4bIqBCQ7Ru_R6SKQ4ZF5-ZIK-7SJK0&downloadName=f24ff368b03ea0d9.jpg)
 
-# CREW [CREW](https://crew.ysizuku.com/)
+# :boat: CREW [CREW](https://crew.ysizuku.com/)
 
-## 프로젝트 소개
+## :loudspeaker: 프로젝트 소개
 
 ### 내 주변에서 함께하고 싶은 모임을 만들거나 참여할 수 있는 플랫폼 서비스
 
-- 내 주변에서 모임을 만들고 크루를 모집하세요!
-- 이미 만들어진 모임에도 참여!
+- :anchor: 내 주변에서 모임을 만들고 크루를 모집하세요!
+- :ticket: 이미 만들어진 모임에도 참여!
 
-#### 프로젝트 기간
+#### :calendar: 프로젝트 기간
 
 2023년 6월 10일 ~ 2023년 7월 28일
 
 ---
 
-## 개발 인원
+## :office: 개발 인원
 
 - 윤진영B (React) [팀장]
 - 윤진영A (React)
@@ -24,13 +24,13 @@
 
 ---
 
-## 기술 스택
+## :wrench: 기술 스택
 
-<code>Node.js</code> / <code>express</code> / <code>Sequelize</code> / <code>MySQL</code> / <code>Git</code> / <code>kakao map</code>
+<code>Node.js</code> / <code>express</code> / <code>Sequelize</code> / <code>MySQL</code> / <code>Git</code> / <code>kakao login</code>
 
 ---
 
-## 라이브러리
+## :books: 라이브러리
 
 | 라이브러리      | 설명                |
 | :-------------- | :------------------ |
@@ -54,37 +54,37 @@
 
 ---
 
-## Architecture
+## :pushpin: Architecture
 
 ![Alt text](<https://file.notion.so/f/s/9028ebe0-25ae-4c7f-8d33-d1849c076544/Crew-%EB%B0%9C%ED%91%9C-%EC%9E%90%EB%A3%8C-004_(1).jpg?id=78dad97d-4bd0-46c9-87ba-9be6cfa57d63&table=block&spaceId=aa8571ff-db5c-4c63-a227-0bac038f37bc&expirationTimestamp=1690092000000&signature=1W6Uk-TgpIueQPkgl57ONh2vC4xl0O9VqpLcZt_C0eo&downloadName=Crew-%EB%B0%9C%ED%91%9C-%EC%9E%90%EB%A3%8C-004+%281%29.jpg>)
 
 ---
 
-## ERD
+## :bank: ERD
 
 ![Alt text](https://file.notion.so/f/s/a463de6e-593f-4a4a-b7bf-e33c4db048ec/drawSQL-crew-export-2023-07-22.png?id=443dd127-bff8-448c-82dd-4ab9129c06d7&table=block&spaceId=aa8571ff-db5c-4c63-a227-0bac038f37bc&expirationTimestamp=1690092000000&signature=Am9dFlhZ1fm0tlMeJ83xB2saNRblyE7GZjeL10GQPUg&downloadName=drawSQL-crew-export-2023-07-22.png)
 
 ---
 
-## [API Document][API-LINK]
+## :pushpin: [API Document][API-LINK]
 
 [API-LINK]: https://www.notion.so/ea092cff3cfb41578f27776d6817023b?v=e2453e26532f4189847fc33c6145b049&pvs=4 "Go API"
 
 ---
 
-## [Project Board][Project Board]
+## :clipboard: [Project Board][Project Board]
 
 [Project Board]: https://burly-fridge-a81.notion.site/1-Crew-S-A-d3269422b794420495da4d74548012cd?pvs=4 "Go Board"
 
 ---
 
-## [Git hub][Git hub]
+## :cat: [Git hub][Git hub]
 
 [Git hub]: https://github.com/CREW-service "GO Crew-service"
 
 ---
 
-## 개선 사항
+## :rocket: 개선 사항
 
 ### 1. 모집 글 마감처리
 
