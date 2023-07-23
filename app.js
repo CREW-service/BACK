@@ -70,13 +70,18 @@ app.use(
     origin: [
       "*.ysizuku.com",
       "http://localhost:3000",
-      "http://crew.ysizuku.com",
       "https://crew.ysizuku.com",
     ],
     credentials: true,
     withCredentials: true,
   })
 );
+
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "https://crew.ysizuku.com"); // 클라이언트 도메인 주소
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  next();
+});
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

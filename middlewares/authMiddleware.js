@@ -3,14 +3,11 @@ const { Users } = require("../models");
 
 module.exports = async (req, res, next) => {
   try {
-    const cookie = req.cookies;
     const authorizationCookies = req.cookies.authorization;
     const authorizationHeaders = req.headers.authorization;
     const authorization = authorizationCookies
       ? authorizationCookies
       : authorizationHeaders;
-    console.log(cookie);
-    console.log(authorization);
 
     // # 403 Cookie가 존재하지 않을 경우
     if (!authorization) {
