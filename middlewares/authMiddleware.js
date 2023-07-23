@@ -8,6 +8,7 @@ module.exports = async (req, res, next) => {
     const authorization = authorizationCookies
       ? authorizationCookies
       : authorizationHeaders;
+    console.log(authorization);
 
     // # 403 Cookie가 존재하지 않을 경우
     if (!authorization) {

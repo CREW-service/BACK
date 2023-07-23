@@ -1,6 +1,6 @@
 ![Alt text](https://file.notion.so/f/s/c8eb68c2-2877-4eeb-95cc-4c77c944c5e3/f24ff368b03ea0d9.jpg?id=6bb14bf5-9e6e-414e-b1a9-f77610826e2d&table=block&spaceId=aa8571ff-db5c-4c63-a227-0bac038f37bc&expirationTimestamp=1690084800000&signature=QULugRJiw0-W-4bIqBCQ7Ru_R6SKQ4ZF5-ZIK-7SJK0&downloadName=f24ff368b03ea0d9.jpg)
 
-# :boat: CREW [CREW](https://crew.ysizuku.com/)
+# :boat: [CREW](https://crew.ysizuku.com/)
 
 ## :loudspeaker: 프로젝트 소개
 
