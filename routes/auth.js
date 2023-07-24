@@ -17,12 +17,12 @@ router.get(
   // kakaoStrategy에서 성공한다면 콜백 실행
   (req, res) => {
     const token = req.user; // 사용자 토큰 정보 (예: JWT 토큰)
-    const oneHour = 120000; // 1시간 (밀리초 단위)
+    const age = 120000; // 2시간 (밀리초 단위)
     res.append(
       "Set-Cookie",
-      `authorization=Bearer ${token}; Max-Age=${oneHour}; Secure; SameSite=None; Domain=api.ysizuku.com; Path=/`
+      `authorization=Bearer ${token}; Max-Age=${age}; Secure; SameSite=None; Domain=.spa-mall.shop; Path=/`
     );
-    res.redirect(302, "https://crew.ysizuku.com/main");
+    res.redirect("https://www.spa-mall.shop");
   }
 );
 

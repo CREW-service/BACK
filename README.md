@@ -142,4 +142,8 @@ const scheduledTask = cron.schedule("0 0 * * *", scheduleBoatsUpdate, {
 scheduledTask.start();
 ```
 
-### 2.
+### 2. 지도로 보내줘야 하는 데이터 양 조절
+
+#### 발생한 문제
+
+카카오 map에 보내줘야 하는 많은 양의 글 목록이 한번에 간다 생각했을 때 프론트 엔드에서 처리해야할 데이터 양도 많지만 조회하고 전송해주는 백엔드 서버는 많은 양의 데이터를 다뤄야 하기에 큰부담
