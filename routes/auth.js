@@ -20,7 +20,7 @@ router.get(
     const age = 120000; // 2시간 (밀리초 단위)
     res.append(
       "Set-Cookie",
-      `authorization=Bearer ${token}; Max-Age=${age}; Secure; HttpOnly; SameSite=None; Domain=.spa-mall.shop; Path=/`
+      `authorization=Bearer ${token}; Max-Age=${age}; Secure; SameSite=None; Domain=.spa-mall.shop; Path=/`
     );
     res.redirect("https://www.spa-mall.shop");
   }
