@@ -67,18 +67,14 @@ const cors = require("cors");
 
 app.use(
   cors({
-    origin: [
-      "*.ysizuku.com",
-      "http://localhost:3000",
-      "https://crew.ysizuku.com",
-    ],
+    origin: ["http://localhost:3000", "https://www.spa-mall.shop"],
     credentials: true,
     withCredentials: true,
   })
 );
 
 app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "https://crew.ysizuku.com"); // 클라이언트 도메인 주소
+  res.setHeader("Access-Control-Allow-Origin", "https://www.spa-mall.shop"); // 클라이언트 도메인 주소
   res.setHeader("Access-Control-Allow-Credentials", "true");
   next();
 });
@@ -95,7 +91,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      domain: ".ysizuku.com", // .ysizuku.com으로 설정하면 모든 서브도메인에서 쿠키를 사용할 수 있습니다.
+      domain: ".spa-mall.shop", // .spa-mall.com으로 설정하면 모든 서브도메인에서 쿠키를 사용할 수 있습니다.
       path: "/", // /로 설정하면 모든 페이지에서 쿠키를 사용할 수 있습니다.
       secure: true, // https가 아닌 환경에서도 사용할 수 있습니다.
       httpOnly: true, // 자바스크립트에서 쿠키를 확인할 수 있습니다.
@@ -106,10 +102,10 @@ app.use(
 const io = require("socket.io")(server, {
   cors: {
     origin: [
-      "*.ysizuku.com",
+      "*.spa-mall.com",
       "http://localhost:3000",
-      "http://crew.ysizuku.com",
-      "https://crew.ysizuku.com",
+      "http://www.spa-mall.shop",
+      "https://www.spa-mall.shop",
     ],
     credentials: true,
   },
