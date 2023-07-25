@@ -29,15 +29,14 @@ router.get(
 router.get("/auth/logout", async (req, res) => {
   try {
     req.session.destroy();
-    res
-      .status(205)
-      .clearCookie("authorization", {
-        domain: ".spa-mall.shop",
-        path: "/",
-        secure: true,
-        sameSite: "none",
-      })
-      .send("로그아웃 성공");
+    res.cookie("authorization", {
+      domain: ".spa-mall.shop", // 쿠키를 설정할 때 사용한 도메인과 동일한 값을 사용합니다.
+      path: "/", // 쿠키를 설정할 때 사용한 경로와 동일한 값을 사용합니다.
+      expires: new Date(0), // 쿠키 만료 시간을 1970년 1월 1일로 설정하여 쿠키를 삭제합니다.
+      secure: true, // 쿠키를 "Secure" 속성으로 설정했다면 true로 설정합니다.
+      sameSite: "None",
+    });
+    res.status(200).json({ message: "로그아웃 성공" });
   } catch (e) {
     console.error(e.message);
     throw new Error("로그아웃 실패");
