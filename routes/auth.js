@@ -28,13 +28,10 @@ router.get(
 
 router.get("/auth/logout", async (req, res) => {
   try {
-    const token = req.user;
-    req.session.destroy();
-    res.append(
-      "Set-Cookie",
-      `authorization=; Max-Age=0; Secure; SameSite=None; Domain=.spa-mall.shop; Path=/`
-    );
-    res.redirect("https://www.spa-mall.shop");
+    req.session.destroy(() => {
+      res.clearCookie("authorization");
+      res.redirect("https://www.spa-mall.shop");
+    });
   } catch (e) {
     console.error(e.message);
     throw new Error("로그아웃 실패");
