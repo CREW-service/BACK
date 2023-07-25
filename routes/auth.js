@@ -30,6 +30,7 @@ router.get("/auth/logout", async (req, res) => {
   try {
     req.session.destroy();
     res.clearCookie("authorization");
+    console.log(res.clearCookie("authorization"));
     res.redirect("https://www.spa-mall.shop");
   } catch (e) {
     console.error(e.message);
