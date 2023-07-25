@@ -29,7 +29,7 @@ router.get(
 router.get("/auth/logout", async (req, res) => {
   try {
     res.clearCookie("authorization");
-    res.redirect("https://www.spa-mall.shop");
+    res.redirect("/");
   } catch (e) {
     console.error(e.message);
     throw new Error("로그아웃 실패");
