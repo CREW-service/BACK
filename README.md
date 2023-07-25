@@ -1,4 +1,5 @@
-![Alt text](https://file.notion.so/f/s/c8eb68c2-2877-4eeb-95cc-4c77c944c5e3/f24ff368b03ea0d9.jpg?id=6bb14bf5-9e6e-414e-b1a9-f77610826e2d&table=block&spaceId=aa8571ff-db5c-4c63-a227-0bac038f37bc&expirationTimestamp=1690084800000&signature=QULugRJiw0-W-4bIqBCQ7Ru_R6SKQ4ZF5-ZIK-7SJK0&downloadName=f24ff368b03ea0d9.jpg)
+![브로셔](https://github.com/CREW-service/BACK/assets/125416958/68fa17d4-06b6-40cb-b53f-7395909689a7)
+
 
 # :boat: [CREW](https://www.spa-mall.shop/)
 
@@ -56,13 +57,13 @@
 
 ## :pushpin: Architecture
 
-![Alt text](<https://file.notion.so/f/s/9028ebe0-25ae-4c7f-8d33-d1849c076544/Crew-%EB%B0%9C%ED%91%9C-%EC%9E%90%EB%A3%8C-004_(1).jpg?id=78dad97d-4bd0-46c9-87ba-9be6cfa57d63&table=block&spaceId=aa8571ff-db5c-4c63-a227-0bac038f37bc&expirationTimestamp=1690092000000&signature=1W6Uk-TgpIueQPkgl57ONh2vC4xl0O9VqpLcZt_C0eo&downloadName=Crew-%EB%B0%9C%ED%91%9C-%EC%9E%90%EB%A3%8C-004+%281%29.jpg>)
+![Crew-발표-자료-004 (1) (1)](https://github.com/CREW-service/BACK/assets/125416958/c8b7f646-25bb-4949-804d-503542bb8844)
 
 ---
 
 ## :bank: ERD
 
-![Alt text](https://file.notion.so/f/s/a463de6e-593f-4a4a-b7bf-e33c4db048ec/drawSQL-crew-export-2023-07-22.png?id=443dd127-bff8-448c-82dd-4ab9129c06d7&table=block&spaceId=aa8571ff-db5c-4c63-a227-0bac038f37bc&expirationTimestamp=1690092000000&signature=Am9dFlhZ1fm0tlMeJ83xB2saNRblyE7GZjeL10GQPUg&downloadName=drawSQL-crew-export-2023-07-22.png)
+![drawSQL-crew-export-2023-07-22](https://github.com/CREW-service/BACK/assets/125416958/a1747020-201a-4a8d-834d-820f8d5291c8)
 
 ---
 
