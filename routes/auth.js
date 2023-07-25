@@ -28,7 +28,10 @@ router.get(
 
 router.get("/auth/logout", async (req, res) => {
   try {
-    res.clearCookie("authorization");
+    res.append(
+      "Set-Cookie",
+      `authorization=Bearer ${token}; Max-Age=${age}; expires=Thu, 01 Jan 1970 00:00:00 UTC; Secure; SameSite=None; Domain=.spa-mall.shop; Path=/`
+    );
     res.status(200).json({ message: "로그아웃 성공" });
   } catch (e) {
     console.error(e.message);
