@@ -35,7 +35,7 @@ router.get("/auth/logout", async (req, res) => {
       secure: true,
       sameSite: "none",
     });
-    res.status(200).json({ message: "로그아웃 성공" });
+    return res.status(200).json({ message: "로그아웃 성공" });
   } catch (e) {
     console.error(e.message);
     throw new Error("로그아웃 실패");
