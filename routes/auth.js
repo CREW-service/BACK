@@ -28,6 +28,7 @@ router.get(
 
 router.get("/auth/logout", async (req, res) => {
   try {
+    const token = req.user;
     req.session.destroy();
     res.append(
       "Set-Cookie",
