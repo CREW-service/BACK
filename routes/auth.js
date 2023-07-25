@@ -29,7 +29,7 @@ router.get(
 router.get("/auth/logout", async (req, res) => {
   try {
     req.session.destroy();
-    return res.clearCookie("authorization").end();
+    return res.clearCookie("Authorization").end();
   } catch (e) {
     console.error(e.message);
     throw new Error("로그아웃 실패");
