@@ -29,13 +29,15 @@ router.get(
 router.get("/auth/logout", async (req, res) => {
   try {
     req.session.destroy();
-    res.clearCookie("authorization", {
-      domain: ".spa-mall.shop",
-      path: "/",
-      secure: true,
-      sameSite: "none",
-    });
-    return res.status(200).json({ message: "로그아웃 성공" });
+    res
+      .status(205)
+      .clearCookie("authorization", {
+        domain: ".spa-mall.shop",
+        path: "/",
+        secure: true,
+        sameSite: "none",
+      })
+      .send("로그아웃 성공");
   } catch (e) {
     console.error(e.message);
     throw new Error("로그아웃 실패");
