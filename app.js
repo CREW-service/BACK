@@ -67,7 +67,11 @@ const cors = require("cors");
 
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://www.spa-mall.shop"],
+    origin: [
+      "http://localhost:3000",
+      "https://www.spa-mall.shop",
+      "https://*.spa-mall.shop",
+    ],
     credentials: true,
     withCredentials: true,
   })
