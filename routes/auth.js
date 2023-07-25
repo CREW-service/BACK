@@ -28,7 +28,7 @@ router.get(
 
 router.get("/auth/logout", async (req, res) => {
   try {
-    res.clearCookie("Set-Cookie");
+    res.clearCookie("authorization");
     res.status(200).json({ message: "로그아웃 성공" });
   } catch (e) {
     console.error(e.message);
