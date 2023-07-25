@@ -28,8 +28,13 @@ router.get(
 
 router.get("/auth/logout", async (req, res) => {
   try {
-    res.clearCookie("authorization");
-    res.redirect("/");
+    res.clearCookie("authorization", {
+      domain: ".spa-mall.shop", // 쿠키 도메인 설정
+      path: "/", // 쿠키 경로 설정
+      secure: true, // HTTPS에서만 쿠키 전송 (배포 환경에서만 적용)
+      sameSite: "None", // Cross-site 요청 시에도 쿠키 전송 (HTTPS에서만 적용)
+    });
+    res.status(200).json({ message: "로그아웃 성공" });
   } catch (e) {
     console.error(e.message);
     throw new Error("로그아웃 실패");
