@@ -59,6 +59,7 @@ const commentRouter = require("./routes/comments");
 const alarmRouter = require("./routes/alarms");
 const mypageRouter = require("./routes/mypage");
 const loginRouter = require("./routes/login");
+const reportRouter = require("./routes/reports");
 
 // 설정
 const cookieParser = require("cookie-parser");
@@ -149,6 +150,7 @@ app.use("/", [
   mypageRouter,
   loginRouter,
   commentRouter,
+  reportRouter,
 ]);
 
 // app.set("io", io);
