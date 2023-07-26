@@ -3,7 +3,6 @@ const { Users } = require("../models");
 
 module.exports = async (req, res, next) => {
   try {
-    console.log(req);
     const authorizationCookies = req.cookies.authorization;
     const authorizationHeaders = req.headers.authorization;
     const authorization = authorizationCookies
