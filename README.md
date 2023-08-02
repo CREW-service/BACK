@@ -150,10 +150,27 @@ scheduledTask.start();
 
 #### 개선 방법
 
-artillery 모듈을 통해 부한 테스트를 진행했습니다.
-프론트 엔드에서 보내주는 중앙 좌표 기준 보여지는 지도의 북동쪽과 남서쪽 좌표를 받아 그에 해당하는 데이터만 전송하는 코드로 변경했습니다.
+- artillery 모듈을 통해 부한 테스트를 진행했습니다.
+- 프론트 엔드에서 보내주는 중앙 좌표 기준 보여지는 지도의 북동쪽과 남서쪽 좌표를 받아 그에 해당하는 데이터만 전송하는 코드로 변경했습니다.
+- error 발생률: 32.39% ==> 0%
+- response_time(p95): 8520.7ms ==> 135.7ms / response_time(p99): 9801.2ms ==> 1380.5ms
+-
 
 - 개선 전
+  <img src="https://github.com/CREW-service/BACK/assets/125416958/a15b90f9-872e-412e-95f0-78fdcebf14da" width = "200" height="200">
+  <img src="https://github.com/CREW-service/BACK/assets/125416958/1d117d69-be04-447a-bc53-12e9d8077844" width = "200" height="200">
+  <img src="https://github.com/CREW-service/BACK/assets/125416958/08a5fec8-99c9-4253-9f42-499a80b648bb" width = "200" height="200">
+  <img src="https://github.com/CREW-service/BACK/assets/125416958/17004c2c-1f1a-466f-b8a6-aa2306c654e4" width = "200" height="200">
+  <img src="https://github.com/CREW-service/BACK/assets/125416958/e214c4f5-d6fb-4853-a045-c416a999ab24" width = "200" height="200">
+  <img src="https://github.com/CREW-service/BACK/assets/125416958/7bfd509b-e1f0-4636-895e-24932ce4a825" width = "200" height="200">
+
+- 개선 후
+  <img src="https://github.com/CREW-service/BACK/assets/125416958/c91a9fa9-8d10-4f16-8442-ac2bd1a3aa38" width = "200" height="200">
+  <img src="https://github.com/CREW-service/BACK/assets/125416958/00727375-50d7-4199-931e-5aa838d1132e" width = "200" height="200">
+  <img src="https://github.com/CREW-service/BACK/assets/125416958/c97eb800-a11a-48ae-bb62-773692125423" width = "200" height="200">
+  <img src="https://github.com/CREW-service/BACK/assets/125416958/c013370e-5dec-4c1a-a72a-18ba1de7b833" width = "200" height="200">
+  <img src="https://github.com/CREW-service/BACK/assets/125416958/cf3883dd-5b29-42d4-930f-aa82a7823a80" width = "200" height="200">
+  <img src="https://github.com/CREW-service/BACK/assets/125416958/eb3584e7-917e-4784-aa69-44c195849cda" width = "200" height="200">
 
 ### 3. 서버에 이미지 저장
 
