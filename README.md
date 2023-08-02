@@ -154,9 +154,9 @@ scheduledTask.start();
 - 프론트 엔드에서 보내주는 중앙 좌표 기준 보여지는 지도의 북동쪽과 남서쪽 좌표를 받아 그에 해당하는 데이터만 전송하는 코드로 변경했습니다.
 - error 발생률: 32.39% ==> 0%
 - response_time(p95): 8520.7ms ==> 135.7ms / response_time(p99): 9801.2ms ==> 1380.5ms
--
 
 - 개선 전
+
   <img src="https://github.com/CREW-service/BACK/assets/125416958/a15b90f9-872e-412e-95f0-78fdcebf14da" width = "200" height="200">
   <img src="https://github.com/CREW-service/BACK/assets/125416958/1d117d69-be04-447a-bc53-12e9d8077844" width = "200" height="200">
   <img src="https://github.com/CREW-service/BACK/assets/125416958/08a5fec8-99c9-4253-9f42-499a80b648bb" width = "200" height="200">
@@ -165,6 +165,7 @@ scheduledTask.start();
   <img src="https://github.com/CREW-service/BACK/assets/125416958/7bfd509b-e1f0-4636-895e-24932ce4a825" width = "200" height="200">
 
 - 개선 후
+
   <img src="https://github.com/CREW-service/BACK/assets/125416958/c91a9fa9-8d10-4f16-8442-ac2bd1a3aa38" width = "200" height="200">
   <img src="https://github.com/CREW-service/BACK/assets/125416958/00727375-50d7-4199-931e-5aa838d1132e" width = "200" height="200">
   <img src="https://github.com/CREW-service/BACK/assets/125416958/c97eb800-a11a-48ae-bb62-773692125423" width = "200" height="200">
